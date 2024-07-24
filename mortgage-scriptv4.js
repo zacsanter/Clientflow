@@ -1,4 +1,30 @@
-function updateDashboardTitle() {
+
+
+(function() {
+    const specificIDs = ['ebN44ZZDqKXacptD3Rm7'];
+    const iconUrls = {
+        'sb_dashboard': 'https://uploads-ssl.webflow.com/64b5377d6986a8653501c06c/669e9d19b05ac2e0b2a515b7_CF%20Icon%20-%20Home_1.svg',
+        'sb_conversations': 'https://uploads-ssl.webflow.com/64b5377d6986a8653501c06c/669e9d86cca54ae22933ebec_CF%20Icon%20-%20Messages.svg',
+        'sb_calendars': 'https://uploads-ssl.webflow.com/64b5377d6986a8653501c06c/669e9ed5f13e559525c15718_CF%20Icon%20-%20Calendar_1.svg',
+        'sb_contacts': 'https://uploads-ssl.webflow.com/64b5377d6986a8653501c06c/669e9ed5baa81c8438b38816_CF%20Icon%20-%20Contacts.svg',
+        'sb_opportunities': 'https://uploads-ssl.webflow.com/64b5377d6986a8653501c06c/669e9ed51b29724575729b36_CF%20Icon%20-%20Cases.svg',
+        'sb_payments': 'https://uploads-ssl.webflow.com/64b5377d6986a8653501c06c/669e9ed52defbfad6f028703_CF%20Icon%20-%20InvoicesSign.svg',
+        'sb_email-marketing': 'https://uploads-ssl.webflow.com/64b5377d6986a8653501c06c/669e9ed56c5ab0f8baf149b3_CF%20Icon%20-%20Marketing.svg',
+        'sb_sites': 'https://uploads-ssl.webflow.com/64b5377d6986a8653501c06c/669e9ed5e020a242eacafd05_CF%20Icon%20-%20Forms.svg',
+        'sb_settings': 'https://uploads-ssl.webflow.com/64b5377d6986a8653501c06c/669e9e6e5c20f2dd81412b8b_CF%20Icon%20-%20Settings_1.svg',
+        'sb_reputation': 'https://uploads-ssl.webflow.com/64b5377d6986a8653501c06c/669eabcca907b2cdb7d70ca8_CF%20Icon%20-%20Reputation v3.svg',
+        'sb_location-mobile-app': 'https://uploads-ssl.webflow.com/64b5377d6986a8653501c06c/669ea7266da273956fa99558_CF%20Icon%20-%20Mobile App v3.svg'
+    };
+    const hideIDs = ['sb_reporting', 'sb_app-media', 'sb_automation', 'sb_memberships'];
+    let changesApplied = false;
+
+    function getCurrentSubaccountID() {
+        const url = window.location.href;
+        const match = url.match(/location\/([^\/]+)/);
+        return match ? match[1] : null;
+    }
+
+    function updateDashboardTitle() {
     const titleElement = document.querySelector('#location-dashboard .hl-header-content .title');
     if (titleElement) {
         titleElement.textContent = 'Home';
@@ -30,30 +56,6 @@ if (window.location.href.indexOf("/dashboard") > -1) {
         setTimeout(updateDashboardTitle, 50);
     }
 }
-
-(function() {
-    const specificIDs = ['ebN44ZZDqKXacptD3Rm7'];
-    const iconUrls = {
-        'sb_dashboard': 'https://uploads-ssl.webflow.com/64b5377d6986a8653501c06c/669e9d19b05ac2e0b2a515b7_CF%20Icon%20-%20Home_1.svg',
-        'sb_conversations': 'https://uploads-ssl.webflow.com/64b5377d6986a8653501c06c/669e9d86cca54ae22933ebec_CF%20Icon%20-%20Messages.svg',
-        'sb_calendars': 'https://uploads-ssl.webflow.com/64b5377d6986a8653501c06c/669e9ed5f13e559525c15718_CF%20Icon%20-%20Calendar_1.svg',
-        'sb_contacts': 'https://uploads-ssl.webflow.com/64b5377d6986a8653501c06c/669e9ed5baa81c8438b38816_CF%20Icon%20-%20Contacts.svg',
-        'sb_opportunities': 'https://uploads-ssl.webflow.com/64b5377d6986a8653501c06c/669e9ed51b29724575729b36_CF%20Icon%20-%20Cases.svg',
-        'sb_payments': 'https://uploads-ssl.webflow.com/64b5377d6986a8653501c06c/669e9ed52defbfad6f028703_CF%20Icon%20-%20InvoicesSign.svg',
-        'sb_email-marketing': 'https://uploads-ssl.webflow.com/64b5377d6986a8653501c06c/669e9ed56c5ab0f8baf149b3_CF%20Icon%20-%20Marketing.svg',
-        'sb_sites': 'https://uploads-ssl.webflow.com/64b5377d6986a8653501c06c/669e9ed5e020a242eacafd05_CF%20Icon%20-%20Forms.svg',
-        'sb_settings': 'https://uploads-ssl.webflow.com/64b5377d6986a8653501c06c/669e9e6e5c20f2dd81412b8b_CF%20Icon%20-%20Settings_1.svg',
-        'sb_reputation': 'https://uploads-ssl.webflow.com/64b5377d6986a8653501c06c/669eabcca907b2cdb7d70ca8_CF%20Icon%20-%20Reputation v3.svg',
-        'sb_location-mobile-app': 'https://uploads-ssl.webflow.com/64b5377d6986a8653501c06c/669ea7266da273956fa99558_CF%20Icon%20-%20Mobile App v3.svg'
-    };
-    const hideIDs = ['sb_reporting', 'sb_app-media', 'sb_automation', 'sb_memberships'];
-    let changesApplied = false;
-
-    function getCurrentSubaccountID() {
-        const url = window.location.href;
-        const match = url.match(/location\/([^\/]+)/);
-        return match ? match[1] : null;
-    }
 
     function replaceText() {
         const sidebar = document.querySelector('#sidebar-v2');
