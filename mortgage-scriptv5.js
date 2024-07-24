@@ -24,6 +24,7 @@
         return match ? match[1] : null;
     }
 
+
     function updateDashboardTitle() {
     const titleElement = document.querySelector('#location-dashboard .hl-header-content .title');
     if (titleElement) {
@@ -56,6 +57,38 @@ if (window.location.href.indexOf("/dashboard") > -1) {
         setTimeout(updateDashboardTitle, 50);
     }
 }
+
+     function updateOpportunitiesTitle() {
+        const titleElement = document.querySelector('.topmenu-navtitle');
+        if (titleElement) {
+            titleElement.textContent = titleElement.textContent.replace('Opportunities', 'Cases');
+        }
+    }
+
+    new MutationObserver(() => {
+        if (window.location.href.indexOf("/opportunities") > -1 && specificIDs.includes(getCurrentSubaccountID())) {
+            // Directly update title if element is present
+            const titleElement = document.querySelector('.topmenu-navtitle');
+            if (titleElement) {
+                updateOpportunitiesTitle();
+            } else {
+                // Retry after a short delay if element is not yet present
+                setTimeout(updateOpportunitiesTitle, 50);
+            }
+        }
+    }).observe(document.body, { attributes: true, subtree: true, childList: true });
+
+    // Initial call to handle the case when the page is loaded directly on the opportunities
+    if (window.location.href.indexOf("/opportunities") > -1 && specificIDs.includes(getCurrentSubaccountID())) {
+        // Directly update title if element is present
+        const titleElement = document.querySelector('.topmenu-navtitle');
+        if (titleElement) {
+            updateOpportunitiesTitle();
+        } else {
+            // Retry after a short delay if element is not yet present
+            setTimeout(updateOpportunitiesTitle, 50);
+        }
+    }
 
     function replaceText() {
         const sidebar = document.querySelector('#sidebar-v2');
