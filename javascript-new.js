@@ -1,4 +1,3 @@
-<script type="text/javascript">
 (function() {
     const specificIDs = ['ebN44ZZDqKXacptD3Rm7'];
     const iconUrls = {
@@ -193,11 +192,8 @@
     // Initial call to apply changes
     applyChanges();
 })();
-</script>
 
 
-    
-  <script type="text/javascript">
 (function() {
     function applyDashboardScripts() {
         const titleElement = document.querySelector('#location-dashboard .hl-header-content .title');
@@ -232,4 +228,4 @@
         }
     }
 })();
-</script>
+
