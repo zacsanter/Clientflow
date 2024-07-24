@@ -10,7 +10,7 @@
         'sb_email-marketing': 'https://uploads-ssl.webflow.com/64b5377d6986a8653501c06c/669e9ed56c5ab0f8baf149b3_CF%20Icon%20-%20Marketing.svg',
         'sb_sites': 'https://uploads-ssl.webflow.com/64b5377d6986a8653501c06c/669e9ed5e020a242eacafd05_CF%20Icon%20-%20Forms.svg',
         'sb_settings': 'https://uploads-ssl.webflow.com/64b5377d6986a8653501c06c/669e9e6e5c20f2dd81412b8b_CF%20Icon%20-%20Settings_1.svg',
-        'sb_reputation': 'https://uploads-ssl.webflow.com/64b5377d6986a8653501c06c/669eabcca907b2cdb7d70ca8_CF%20Icon%20-%20Reputation%20v3.svg',
+        'sb_reputation': 'https://uploads-ssl.webflow.com/64b5377d6986a8653501c06c/669eabcca907b2cdb7d70ca8_CF%20Icon%20-%20Reputation v3.svg',
         'sb_location-mobile-app': 'https://uploads-ssl.webflow.com/64b5377d6986a8653501c06c/669ea7266da273956fa99558_CF%20Icon%20-%20Mobile App v3.svg'
     };
     const hideIDs = ['sb_reporting', 'sb_app-media', 'sb_automation', 'sb_memberships'];
@@ -121,7 +121,7 @@
             divider2 = createDivider('sb_divider-2');
         }
 
-       const aboveDividerIds = ['sb_payments', 'sb_contacts', 'sb_calendars', 'sb_conversations', 'sb_opportunities', 'sb_dashboard'];
+        const aboveDividerIds = ['sb_payments', 'sb_contacts', 'sb_calendars', 'sb_conversations', 'sb_opportunities', 'sb_dashboard'];
         const belowDividerIds1 = ['c6a282f5-82f5-42cb-af05-44f1977526fd', 'fe805c15-fdd8-4c7b-ac52-f7e918df91af', '0c00b7dd-1472-4583-96d3-300efa90270e', '78bd1c09-76e7-46a3-8b6c-084a4bcb4e85'];
         const belowDividerIds2 = ['sb_email-marketing', 'sb_sites', 'sb_reputation', 'sb_location-mobile-app', '4ef91dc6-9fa4-415e-96a9-9a15a298d5d9'];
 
@@ -195,6 +195,14 @@
 
 
 (function() {
+    const specificIDs = ['ebN44ZZDqKXacptD3Rm7'];
+
+    function getCurrentSubaccountID() {
+        const url = window.location.href;
+        const match = url.match(/location\/([^\/]+)/);
+        return match ? match[1] : null;
+    }
+
     function applyDashboardScripts() {
         const titleElement = document.querySelector('#location-dashboard .hl-header-content .title');
         if (titleElement) {
@@ -204,7 +212,7 @@
     }
 
     new MutationObserver(() => {
-        if (window.location.href.indexOf("/dashboard") > -1) {
+        if (window.location.href.indexOf("/dashboard") > -1 && specificIDs.includes(getCurrentSubaccountID())) {
             // Directly update title without fading if element is present
             const titleElement = document.querySelector('#location-dashboard .hl-header-content .title');
             if (titleElement) {
@@ -217,7 +225,7 @@
     }).observe(document.body, { attributes: true, subtree: true, childList: true });
 
     // Initial call to handle the case when the page is loaded directly on the dashboard
-    if (window.location.href.indexOf("/dashboard") > -1) {
+    if (window.location.href.indexOf("/dashboard") > -1 && specificIDs.includes(getCurrentSubaccountID())) {
         // Directly update title without fading if element is present
         const titleElement = document.querySelector('#location-dashboard .hl-header-content .title');
         if (titleElement) {
