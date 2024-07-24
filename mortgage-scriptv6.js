@@ -58,38 +58,47 @@ if (window.location.href.indexOf("/dashboard") > -1) {
     }
 }
 
-     function updateOpportunitiesTitle() {
+function updateOpportunitiesContent() {
+        // Change 'Opportunities' to 'Cases' in the title
         const titleElement = document.querySelector('.topmenu-navtitle');
         if (titleElement) {
             titleElement.textContent = titleElement.textContent.replace('Opportunities', 'Cases');
+        }
+
+        // Change 'Opportunities' to 'Cases' in span class 'flex items-center'
+        const itemsCenterElements = document.querySelectorAll('.flex.items-center span');
+        itemsCenterElements.forEach(element => {
+            if (element.textContent.includes('Opportunities')) {
+                element.textContent = element.textContent.replace('Opportunities', 'Cases');
+            }
+        });
+
+        // Change 'Pipelines' to 'Stages' in span class 'flex items-center'
+        itemsCenterElements.forEach(element => {
+            if (element.textContent.includes('Pipelines')) {
+                element.textContent = element.textContent.replace('Pipelines', 'Stages');
+            }
+        });
+
+        // Change 'Add Opportunity' to 'Add Case' in class 'add-opportunity'
+        const addOpportunityElement = document.querySelector('.add-opportunity');
+        if (addOpportunityElement) {
+            addOpportunityElement.textContent = addOpportunityElement.textContent.replace('Add Opportunity', 'Add Case');
         }
     }
 
     new MutationObserver(() => {
         if (window.location.href.indexOf("/opportunities") > -1 && specificIDs.includes(getCurrentSubaccountID())) {
-            // Directly update title if element is present
-            const titleElement = document.querySelector('.topmenu-navtitle');
-            if (titleElement) {
-                updateOpportunitiesTitle();
-            } else {
-                // Retry after a short delay if element is not yet present
-                setTimeout(updateOpportunitiesTitle, 50);
-            }
+            // Directly update content if elements are present
+            updateOpportunitiesContent();
         }
     }).observe(document.body, { attributes: true, subtree: true, childList: true });
 
     // Initial call to handle the case when the page is loaded directly on the opportunities
     if (window.location.href.indexOf("/opportunities") > -1 && specificIDs.includes(getCurrentSubaccountID())) {
-        // Directly update title if element is present
-        const titleElement = document.querySelector('.topmenu-navtitle');
-        if (titleElement) {
-            updateOpportunitiesTitle();
-        } else {
-            // Retry after a short delay if element is not yet present
-            setTimeout(updateOpportunitiesTitle, 50);
-        }
+        // Directly update content if elements are present
+        updateOpportunitiesContent();
     }
-
     function replaceText() {
         const sidebar = document.querySelector('#sidebar-v2');
         let textChanged = false;
