@@ -1,5 +1,3 @@
-//Navbar
-
 <script type="text/javascript">
 (function() {
     const specificIDs = ['ebN44ZZDqKXacptD3Rm7'];
@@ -198,7 +196,7 @@
 </script>
 
 
-//Dashboard
+    
   <script type="text/javascript">
 (function() {
     function applyDashboardScripts() {
