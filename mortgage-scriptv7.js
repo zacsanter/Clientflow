@@ -62,28 +62,28 @@ function updateOpportunitiesContent() {
         // Change 'Opportunities' to 'Cases' in the title
         const titleElement = document.querySelector('.topmenu-navtitle');
         if (titleElement) {
-            titleElement.textContent = titleElement.textContent.replace('Opportunities', 'Cases');
+            titleElement.textContent = titleElement.textContent.replace(/Opportunities/i, 'Cases');
         }
 
         // Change 'Opportunities' to 'Cases' in span class 'flex items-center'
         const itemsCenterElements = document.querySelectorAll('.flex.items-center span');
         itemsCenterElements.forEach(element => {
-            if (element.textContent.includes('Opportunities')) {
-                element.textContent = element.textContent.replace('Opportunities', 'Cases');
+            if (/Opportunities/i.test(element.textContent)) {
+                element.textContent = element.textContent.replace(/Opportunities/i, 'Cases');
             }
         });
 
         // Change 'Pipelines' to 'Stages' in span class 'flex items-center'
         itemsCenterElements.forEach(element => {
-            if (element.textContent.includes('Pipelines')) {
-                element.textContent = element.textContent.replace('Pipelines', 'Stages');
+            if (/Pipelines/i.test(element.textContent)) {
+                element.textContent = element.textContent.replace(/Pipelines/i, 'Stages');
             }
         });
 
         // Change 'Add Opportunity' to 'Add Case' in class 'add-opportunity'
         const addOpportunityElement = document.querySelector('.add-opportunity');
         if (addOpportunityElement) {
-            addOpportunityElement.textContent = addOpportunityElement.textContent.replace('Add Opportunity', 'Add Case');
+            addOpportunityElement.textContent = addOpportunityElement.textContent.replace(/Add opportunity/i, 'Add Case');
         }
     }
 
@@ -99,6 +99,7 @@ function updateOpportunitiesContent() {
         // Directly update content if elements are present
         updateOpportunitiesContent();
     }
+    
     function replaceText() {
         const sidebar = document.querySelector('#sidebar-v2');
         let textChanged = false;
