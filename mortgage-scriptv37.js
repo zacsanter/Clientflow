@@ -164,7 +164,7 @@ if (window.location.href.indexOf("/dashboard") > -1) {
     function showTopMenuNav() {
         const topMenuNav = document.querySelector('.topmenu-nav');
         if (topMenuNav) {
-            topMenuNav.style.display = 'inline-block';
+            topMenuNav.style.display = 'flex';
         }
     }
 
