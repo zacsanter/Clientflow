@@ -59,7 +59,7 @@ if (window.location.href.indexOf("/dashboard") > -1) {
 }
 
    
-function updateTitle() {
+   function updateTitle() {
         const titleElement = document.querySelector('.topmenu-navtitle');
         if (titleElement) {
             if (window.location.href.indexOf("/opportunities") > -1) {
@@ -224,15 +224,19 @@ function updateTitle() {
                 } else if (window.location.href.indexOf("/payments") > -1) {
                     showTopMenuNav();
                     hidePaymentsIDs();
+                    updateTitle();
                 } else if (window.location.href.indexOf("/marketing") > -1) {
                     showTopMenuNav();
                     hideMarketingIDs();
+                    updateTitle();
                 } else if (window.location.href.indexOf("/funnels-websites") > -1) {
                     showTopMenuNav();
                     hideFunnelsWebsitesIDs();
+                    updateTitle();
                 } else if (window.location.href.indexOf("/reputation") > -1) {
                     showTopMenuNav();
                     hideReputationIDs();
+                    updateTitle();
                 } else {
                     showTopMenuNav();
                     updateTitle(); // Update title for other sections
@@ -259,15 +263,19 @@ function updateTitle() {
         } else if (window.location.href.indexOf("/payments") > -1) {
             showTopMenuNav();
             hidePaymentsIDs();
+            updateTitle();
         } else if (window.location.href.indexOf("/marketing") > -1) {
             showTopMenuNav();
             hideMarketingIDs();
+            updateTitle();
         } else if (window.location.href.indexOf("/funnels-websites") > -1) {
             showTopMenuNav();
             hideFunnelsWebsitesIDs();
+            updateTitle();
         } else if (window.location.href.indexOf("/reputation") > -1) {
             showTopMenuNav();
             hideReputationIDs();
+            updateTitle();
         } else {
             showTopMenuNav();
             updateTitle(); // Update title for other sections
