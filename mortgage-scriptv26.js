@@ -59,7 +59,7 @@ if (window.location.href.indexOf("/dashboard") > -1) {
 }
 
    
-    function updateTitle() {
+     function updateTitle() {
         const titleElement = document.querySelector('.topmenu-navtitle');
         if (titleElement) {
             if (window.location.href.indexOf("/opportunities") > -1) {
@@ -151,7 +151,7 @@ if (window.location.href.indexOf("/dashboard") > -1) {
     }
 
     function updateConversationsContent() {
-        // Change 'Conversations' to 'Messages' in the title
+        // Change 'Conversations' to 'Messages' in span class 'flex items-center'
         const itemsCenterElements = document.querySelectorAll('.flex.items-center span');
         itemsCenterElements.forEach(element => {
             if (/Conversations/i.test(element.textContent)) {
