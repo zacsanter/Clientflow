@@ -58,7 +58,7 @@ if (window.location.href.indexOf("/dashboard") > -1) {
     }
 }
 
-  function updateOpportunitiesContent() {
+   function updateOpportunitiesContent() {
         // Change 'Opportunities' to 'Cases' in the title
         const titleElement = document.querySelector('.topmenu-navtitle');
         if (titleElement) {
@@ -130,25 +130,6 @@ if (window.location.href.indexOf("/dashboard") > -1) {
         }
     }
 
-    function observeChanges() {
-        const observer = new MutationObserver(() => {
-            if (window.location.href.indexOf("/opportunities") > -1 && specificIDs.includes(getCurrentSubaccountID())) {
-                updateOpportunitiesContent();
-            }
-        });
-
-        observer.observe(document.body, { attributes: true, subtree: true, childList: true });
-    }
-
-    observeChanges();
-
-    // Initial call to handle the case when the page is loaded directly on the opportunities
-    if (window.location.href.indexOf("/opportunities") > -1 && specificIDs.includes(getCurrentSubaccountID())) {
-        updateOpportunitiesContent();
-    }
-
-// Messages
-
     function updateConversationsContent() {
         // Change 'Conversations' to 'Messages' in the title
         const titleElement = document.querySelector('.topmenu-navtitle');
@@ -159,8 +140,13 @@ if (window.location.href.indexOf("/dashboard") > -1) {
 
     function observeChanges() {
         const observer = new MutationObserver(() => {
-            if (window.location.href.indexOf("/conversations") > -1 && specificIDs.includes(getCurrentSubaccountID())) {
-                updateConversationsContent();
+            if (specificIDs.includes(getCurrentSubaccountID())) {
+                if (window.location.href.indexOf("/opportunities") > -1) {
+                    updateOpportunitiesContent();
+                } else if (window.location.href.indexOf("/conversations") > -1) {
+                    updateConversationsContent();
+                }
+                // Add more conditions for other sections as needed
             }
         });
 
@@ -169,9 +155,14 @@ if (window.location.href.indexOf("/dashboard") > -1) {
 
     observeChanges();
 
-    // Initial call to handle the case when the page is loaded directly on the conversations
-    if (window.location.href.indexOf("/conversations") > -1 && specificIDs.includes(getCurrentSubaccountID())) {
-        updateConversationsContent();
+    // Initial call to handle the case when the page is loaded directly on a specific section
+    if (specificIDs.includes(getCurrentSubaccountID())) {
+        if (window.location.href.indexOf("/opportunities") > -1) {
+            updateOpportunitiesContent();
+        } else if (window.location.href.indexOf("/conversations") > -1) {
+            updateConversationsContent();
+        }
+        // Add more initial calls for other sections as needed
     }
     
     
