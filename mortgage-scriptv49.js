@@ -35,6 +35,10 @@
             navigateToEmailTemplates();
         } else if (event.data === 'navigate_to_text_templates') {
             navigateToTextTemplates();
+        } else if (event.data === 'open_newlead_popup') {
+            openNewLeadPopup();
+        } else if (event.data === 'open_remortgage_popup') {
+            openRemortgagePopup();
         }
     }
 
@@ -78,43 +82,66 @@
         }
     }
 
-    window.addEventListener('message', handleIframeMessage, false);
+    function createPopupContainer(popupId, iframeSrc, iframeTitle, height) {
+        const overlay = document.createElement('div');
+        overlay.id = `popup-overlay-${popupId}`;
+        overlay.style.cssText = 'position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); z-index: 9998; display: flex; justify-content: center; align-items: center;';
+        overlay.onclick = () => closePopup(popupId);
+        document.body.appendChild(overlay);
 
-    const observer = new MutationObserver((mutations) => {
-        mutations.forEach((mutation) => {
-            mutation.addedNodes.forEach((node) => {
-                if (node.tagName === 'IFRAME' && node.src.includes('clientflow.ai')) {
-                    node.addEventListener('load', () => {
-                        console.log('Iframe loaded and ready to send messages.');
-                    });
-                    observer.disconnect();
-                }
-            });
-        });
-    });
+        const popupContainer = document.createElement('div');
+        popupContainer.id = `popup-container-${popupId}`;
+        popupContainer.style.cssText = `position: relative; width: 700px; height: ${height}px; max-height: 90%; background: white; border-radius: 20px; display: flex; flex-direction: column; justify-content: center; align-items: center;`;
+        overlay.appendChild(popupContainer);
 
-    observer.observe(document.body, {
-        childList: true,
-        subtree: true
-    });
+        const popupIframe = document.createElement('iframe');
+        popupIframe.src = iframeSrc;
+        popupIframe.style.cssText = 'width: 100%; height: 100%; border: none; border-radius: 20px;';
+        popupIframe.id = `popup-${popupId}`;
+        popupIframe.title = iframeTitle;
+        popupContainer.appendChild(popupIframe);
 
-    new MutationObserver(() => {
-        if (window.location.href.indexOf("/dashboard") > -1) {
-            const titleElement = document.querySelector('#location-dashboard .hl-header-content .title');
-            if (titleElement) {
-                updateDashboardTitle();
-            } else {
-                setTimeout(updateDashboardTitle, 50);
-            }
-        }
-    }).observe(document.body, { attributes: true, subtree: true, childList: true });
+        const closeBtn = document.createElement('button');
+        closeBtn.id = `popup-close-btn-${popupId}`;
+        closeBtn.innerHTML = '&times;';
+        closeBtn.style.cssText = 'position: absolute; top: 10px; right: 20px; z-index: 10000; background: transparent; border: none; font-size: 24px; font-weight: bold; color: black; cursor: pointer;';
+        closeBtn.onclick = () => closePopup(popupId);
+        popupContainer.appendChild(closeBtn);
+    }
 
-    if (window.location.href.indexOf("/dashboard") > -1) {
-        const titleElement = document.querySelector('#location-dashboard .hl-header-content .title');
-        if (titleElement) {
-            updateDashboardTitle();
+    function openNewLeadPopup() {
+        const popupContainer = document.getElementById('popup-container-newlead');
+        const overlay = document.getElementById('popup-overlay-newlead');
+
+        if (popupContainer && overlay) {
+            popupContainer.style.display = 'flex';
+            overlay.style.display = 'flex';
         } else {
-            setTimeout(updateDashboardTitle, 50);
+            createPopupContainer('newlead', 'https://api.clientflow.ai/widget/form/Hpix7Xq0muUZmlINd37c', 'Manual Input', 865);
+        }
+    }
+
+    function openRemortgagePopup() {
+        const popupContainer = document.getElementById('popup-container-remortgage');
+        const overlay = document.getElementById('popup-overlay-remortgage');
+
+        if (popupContainer && overlay) {
+            popupContainer.style.display = 'flex';
+            overlay.style.display = 'flex';
+        } else {
+            createPopupContainer('remortgage', 'https://api.clientflow.ai/widget/form/ZN684guea1XfjJg3OIdT', 'New Remortgage Clients', 410);
+        }
+    }
+
+    function closePopup(popupId) {
+        const popupContainer = document.getElementById(`popup-container-${popupId}`);
+        const overlay = document.getElementById(`popup-overlay-${popupId}`);
+
+        if (popupContainer) {
+            popupContainer.style.display = 'none';
+        }
+        if (overlay) {
+            overlay.style.display = 'none';
         }
     }
 
@@ -145,6 +172,7 @@
 
     function updateOpportunitiesContent() {
         updateTitle();
+
         const itemsCenterElements = document.querySelectorAll('.flex.items-center span');
         itemsCenterElements.forEach(element => {
             if (/Opportunities/i.test(element.textContent)) {
@@ -203,6 +231,7 @@
 
     function updateConversationsContent() {
         updateTitle();
+
         const itemsCenterElements = document.querySelectorAll('.flex.items-center span');
         itemsCenterElements.forEach(element => {
             if (/Conversations/i.test(element.textContent)) {
@@ -261,7 +290,6 @@
                 } else if (window.location.href.indexOf("/conversations") > -1) {
                     updateConversationsContent();
                 } else if (window.location.href.indexOf("/marketing/emails/all") > -1) {
-                    hideMarketingIDs();
                     updateTitle();
                 } else if (window.location.href.indexOf("/payments") > -1) {
                     hidePaymentsIDs();
@@ -276,7 +304,7 @@
                     hideReputationIDs();
                     updateTitle();
                 } else {
-                    updateTitle();
+                    updateTitle(); // Update title for other sections
                 }
             }
         });
@@ -294,7 +322,6 @@
         } else if (window.location.href.indexOf("/conversations") > -1) {
             updateConversationsContent();
         } else if (window.location.href.indexOf("/marketing/emails/all") > -1) {
-            hideMarketingIDs();
             updateTitle();
         } else if (window.location.href.indexOf("/payments") > -1) {
             hidePaymentsIDs();
@@ -309,7 +336,7 @@
             hideReputationIDs();
             updateTitle();
         } else {
-            updateTitle();
+            updateTitle(); // Update title for other sections
         }
     }
 
@@ -391,6 +418,7 @@
 
     function reorderMenu() {
         const nav = document.querySelector('nav.flex-1');
+
         const aboveDividerIds = ['sb_payments', 'sb_contacts', 'sb_calendars', 'sb_conversations', 'sb_opportunities', 'sb_dashboard'];
         const belowDividerIds = ['sb_email-marketing', 'sb_sites', 'sb_reputation', 'sb_location-mobile-app', '4ef91dc6-9fa4-415e-96a9-9a15a298d5d9'];
 
