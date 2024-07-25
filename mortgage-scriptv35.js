@@ -59,7 +59,7 @@ if (window.location.href.indexOf("/dashboard") > -1) {
 }
 
    
-   function updateTitle() {
+ function updateTitle() {
         const titleElement = document.querySelector('.topmenu-navtitle');
         if (titleElement) {
             if (window.location.href.indexOf("/opportunities") > -1) {
@@ -84,20 +84,9 @@ if (window.location.href.indexOf("/dashboard") > -1) {
         }
     }
 
-    function resetContent() {
-        // Recreate the 'topmenu-nav' div if it's missing
-        if (!document.querySelector('.topmenu-nav')) {
-            const topMenuNav = document.createElement('div');
-            topMenuNav.className = 'topmenu-nav';
-            // Add necessary content and structure to the topMenuNav div if needed
-            document.body.prepend(topMenuNav); // Adjust the location as per the actual DOM structure
-        }
-    }
-
     function updateOpportunitiesContent() {
         updateTitle();
 
-        // Change 'Opportunities' to 'Cases' in span class 'flex items-center'
         const itemsCenterElements = document.querySelectorAll('.flex.items-center span');
         itemsCenterElements.forEach(element => {
             if (/Opportunities/i.test(element.textContent)) {
@@ -105,20 +94,17 @@ if (window.location.href.indexOf("/dashboard") > -1) {
             }
         });
 
-        // Change 'Pipelines' to 'Stages' in span class 'flex items-center'
         itemsCenterElements.forEach(element => {
             if (/Pipelines/i.test(element.textContent)) {
                 element.textContent = element.textContent.replace(/Pipelines/i, 'Stages');
             }
         });
 
-        // Change 'Add Opportunity' to 'Add Case' in class 'add-opportunity'
         const addOpportunityElement = document.querySelector('.add-opportunity');
         if (addOpportunityElement) {
             addOpportunityElement.textContent = addOpportunityElement.textContent.replace(/Add opportunity/i, 'Add Case');
         }
 
-        // Change 'opportunities' to 'cases' in class 'count'
         const countElements = document.querySelectorAll('.count');
         countElements.forEach(element => {
             if (/opportunities/i.test(element.textContent)) {
@@ -126,13 +112,11 @@ if (window.location.href.indexOf("/dashboard") > -1) {
             }
         });
 
-        // Change 'Add new opportunity' to 'Add new case' in class 'title'
         const newTitleElement = document.querySelector('.title');
         if (newTitleElement) {
             newTitleElement.textContent = newTitleElement.textContent.replace(/Add new opportunity/i, 'Add new case');
         }
 
-        // Change description texts in class 'description' and 'pb-3'
         const descriptionElement = document.querySelector('.description');
         if (descriptionElement) {
             descriptionElement.textContent = descriptionElement.textContent.replace(/Create new opportunity by filling in details and selecting a contact/i, 'Create new case by filling in details and selecting a contact');
@@ -143,19 +127,16 @@ if (window.location.href.indexOf("/dashboard") > -1) {
             pb3Element.textContent = pb3Element.textContent.replace(/You can now have different owner for contact and opportunity./i, 'You can now have different owner for contact and case.');
         }
 
-        // Change 'Opportunity Details' to 'Case Details' in a specific button
         const opportunityDetailsButton = document.querySelector('.bg-blue-50.font-bold.text-blue-800.w-48.rounded.p-2.text-left.text-xs');
         if (opportunityDetailsButton) {
             opportunityDetailsButton.textContent = opportunityDetailsButton.textContent.replace(/Opportunity Details/i, 'Case Details');
         }
 
-        // Change 'Pipelines' to 'Stages' in h3 element
         const pipelineTitleElement = document.querySelector('.hl_controls--left.flex h3');
         if (pipelineTitleElement) {
             pipelineTitleElement.textContent = pipelineTitleElement.textContent.replace(/Pipelines/i, 'Stages');
         }
 
-        // Change 'Create New Pipeline' to 'Create New Stage' button within .hl_controls .hl_controls--right
         const createPipelineButton = document.querySelector('.hl_controls .hl_controls--right button');
         if (createPipelineButton && createPipelineButton.textContent.includes('Create new pipeline')) {
             createPipelineButton.textContent = createPipelineButton.textContent.replace(/Create new pipeline/i, 'Create new stage');
@@ -165,7 +146,6 @@ if (window.location.href.indexOf("/dashboard") > -1) {
     function updateConversationsContent() {
         updateTitle();
 
-        // Change 'Conversations' to 'Messages' in span class 'flex items-center'
         const itemsCenterElements = document.querySelectorAll('.flex.items-center span');
         itemsCenterElements.forEach(element => {
             if (/Conversations/i.test(element.textContent)) {
@@ -174,80 +154,32 @@ if (window.location.href.indexOf("/dashboard") > -1) {
         });
     }
 
-    function updatePaymentsContent() {
-        updateTitle();
-
-        // Hide specific IDs in the payments section
-        const idsToHide = ['tb_payment-orders-new', 'tb_payment-subscriptions', 'tb_payment-links'];
-        idsToHide.forEach(id => {
-            const element = document.getElementById(id);
-            if (element) {
-                element.style.display = 'none';
-            }
-        });
-    }
-
-    function updateMarketingContent() {
-        updateTitle();
-
-        // Hide specific ID in the marketing section
-        const element = document.getElementById('tb_affiliate-manager');
-        if (element) {
-            element.style.display = 'none';
-        }
-    }
-
-    function updateFunnelsWebsitesContent() {
-        updateTitle();
-
-        // Hide specific IDs in the funnels-websites section
-        const idsToHide = ['tb_funnels', 'tb_websites', 'tb_analytics', 'tb_blogs', 'tb_wordpress-v2', 'tb_clientportal', 'tb_url-redirects'];
-        idsToHide.forEach(id => {
-            const element = document.getElementById(id);
-            if (element) {
-                element.style.display = 'none';
-            }
-        });
-    }
-
-    function updateReputationContent() {
-        updateTitle();
-
-        // Hide specific ID in the reputation section
-        const element = document.getElementById('tb_online-listings');
-        if (element) {
-            element.style.display = 'none';
-        }
-    }
-
-    function updateConversationsTemplatesContent() {
-        // Remove the div with class 'topmenu-nav' in the conversations/templates section
+    function hideTopMenuNav() {
         const topMenuNav = document.querySelector('.topmenu-nav');
         if (topMenuNav) {
-            topMenuNav.remove();
+            topMenuNav.style.display = 'none';
+        }
+    }
+
+    function showTopMenuNav() {
+        const topMenuNav = document.querySelector('.topmenu-nav');
+        if (topMenuNav) {
+            topMenuNav.style.display = 'block';
         }
     }
 
     function observeChanges() {
         const observer = new MutationObserver(() => {
             if (specificIDs.includes(getCurrentSubaccountID())) {
-                resetContent();
                 if (window.location.href.indexOf("/opportunities") > -1) {
                     updateOpportunitiesContent();
                 } else if (window.location.href.indexOf("/conversations/templates") > -1) {
-                    updateConversationsTemplatesContent();
+                    hideTopMenuNav();
                 } else if (window.location.href.indexOf("/conversations") > -1) {
                     updateConversationsContent();
-                } else if (window.location.href.indexOf("/payments") > -1) {
-                    updatePaymentsContent();
-                } else if (window.location.href.indexOf("/marketing") > -1) {
-                    updateMarketingContent();
-                } else if (window.location.href.indexOf("/funnels-websites") > -1) {
-                    updateFunnelsWebsitesContent();
-                } else if (window.location.href.indexOf("/reputation") > -1) {
-                    updateReputationContent();
                 } else {
-                    updateTitle(); // Update title for other sections
+                    showTopMenuNav();
+                    updateTitle();
                 }
             }
         });
@@ -257,28 +189,18 @@ if (window.location.href.indexOf("/dashboard") > -1) {
 
     observeChanges();
 
-    // Initial call to handle the case when the page is loaded directly on a specific section
     if (specificIDs.includes(getCurrentSubaccountID())) {
-        resetContent();
         if (window.location.href.indexOf("/opportunities") > -1) {
             updateOpportunitiesContent();
         } else if (window.location.href.indexOf("/conversations/templates") > -1) {
-            updateConversationsTemplatesContent();
+            hideTopMenuNav();
         } else if (window.location.href.indexOf("/conversations") > -1) {
             updateConversationsContent();
-        } else if (window.location.href.indexOf("/payments") > -1) {
-            updatePaymentsContent();
-        } else if (window.location.href.indexOf("/marketing") > -1) {
-            updateMarketingContent();
-        } else if (window.location.href.indexOf("/funnels-websites") > -1) {
-            updateFunnelsWebsitesContent();
-        } else if (window.location.href.indexOf("/reputation") > -1) {
-            updateReputationContent();
         } else {
-            updateTitle(); // Update title for other sections
+            showTopMenuNav();
+            updateTitle();
         }
     }
-
     
     
     function replaceText() {
