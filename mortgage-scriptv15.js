@@ -59,13 +59,13 @@ if (window.location.href.indexOf("/dashboard") > -1) {
 }
 
   function updateOpportunitiesContent() {
-        // Step 1
+        // Change 'Opportunities' to 'Cases' in the title
         const titleElement = document.querySelector('.topmenu-navtitle');
         if (titleElement) {
             titleElement.textContent = titleElement.textContent.replace(/Opportunities/i, 'Cases');
         }
 
-        // Step 2
+        // Change 'Opportunities' to 'Cases' in span class 'flex items-center'
         const itemsCenterElements = document.querySelectorAll('.flex.items-center span');
         itemsCenterElements.forEach(element => {
             if (/Opportunities/i.test(element.textContent)) {
@@ -73,20 +73,20 @@ if (window.location.href.indexOf("/dashboard") > -1) {
             }
         });
 
-        // Step 3
+        // Change 'Pipelines' to 'Stages' in span class 'flex items-center'
         itemsCenterElements.forEach(element => {
             if (/Pipelines/i.test(element.textContent)) {
                 element.textContent = element.textContent.replace(/Pipelines/i, 'Stages');
             }
         });
 
-        // Step 4
+        // Change 'Add Opportunity' to 'Add Case' in class 'add-opportunity'
         const addOpportunityElement = document.querySelector('.add-opportunity');
         if (addOpportunityElement) {
             addOpportunityElement.textContent = addOpportunityElement.textContent.replace(/Add opportunity/i, 'Add Case');
         }
 
-        // Step 5
+        // Change 'opportunities' to 'cases' in class 'count'
         const countElements = document.querySelectorAll('.count');
         countElements.forEach(element => {
             if (/opportunities/i.test(element.textContent)) {
@@ -94,13 +94,13 @@ if (window.location.href.indexOf("/dashboard") > -1) {
             }
         });
 
-        // Step 6
+        // Change 'Add new opportunity' to 'Add new case' in class 'title'
         const newTitleElement = document.querySelector('.title');
         if (newTitleElement) {
             newTitleElement.textContent = newTitleElement.textContent.replace(/Add new opportunity/i, 'Add new case');
         }
 
-        // Step 7
+        // Change description texts in class 'description' and 'pb-3'
         const descriptionElement = document.querySelector('.description');
         if (descriptionElement) {
             descriptionElement.textContent = descriptionElement.textContent.replace(/Create new opportunity by filling in details and selecting a contact/i, 'Create new case by filling in details and selecting a contact');
@@ -111,25 +111,22 @@ if (window.location.href.indexOf("/dashboard") > -1) {
             pb3Element.textContent = pb3Element.textContent.replace(/You can now have different owner for contact and opportunity./i, 'You can now have different owner for contact and case.');
         }
 
-        // Step 8
+        // Change 'Opportunity Details' to 'Case Details' in a specific button
         const opportunityDetailsButton = document.querySelector('.bg-blue-50.font-bold.text-blue-800.w-48.rounded.p-2.text-left.text-xs');
         if (opportunityDetailsButton) {
             opportunityDetailsButton.textContent = opportunityDetailsButton.textContent.replace(/Opportunity Details/i, 'Case Details');
         }
 
-        // Step 9
+        // Change 'Pipelines' to 'Stages' in h3 element
         const pipelineTitleElement = document.querySelector('.hl_controls--left.flex h3');
         if (pipelineTitleElement) {
             pipelineTitleElement.textContent = pipelineTitleElement.textContent.replace(/Pipelines/i, 'Stages');
         }
 
-        // Step 10
+        // Hide 'Create New Pipeline' button
         const createPipelineButton = document.querySelector('.hl-btn.inline-flex.items-center');
-        if (createPipelineButton) {
-            const textNode = Array.from(createPipelineButton.childNodes).find(node => node.nodeType === Node.TEXT_NODE && node.nodeValue.includes('Create new pipeline'));
-            if (textNode) {
-                textNode.nodeValue = textNode.nodeValue.replace(/Create new pipeline/i, 'Create new stage');
-            }
+        if (createPipelineButton && createPipelineButton.textContent.includes('Create new pipeline')) {
+            createPipelineButton.style.display = 'none';
         }
     }
 
