@@ -75,7 +75,7 @@ if (window.location.href.indexOf("/dashboard") > -1) {
             } else if (window.location.href.indexOf("/marketing") > -1) {
                 titleElement.textContent = 'Marketing';
             } else if (window.location.href.indexOf("/funnels-websites") > -1) {
-                titleElement.textContent = 'Forms';
+                titleElement.textContent = 'Funnels & Forms';
             } else if (window.location.href.indexOf("/reputation") > -1) {
                 titleElement.textContent = 'Reviews';
             } else {
@@ -189,7 +189,7 @@ if (window.location.href.indexOf("/dashboard") > -1) {
     }
 
     function hideFunnelsWebsitesIDs() {
-        const idsToHide = ['tb_funnels', 'tb_websites', 'tb_analytics', 'tb_blogs', 'tb_wordpress-v2', 'tb_clientportal', 'tb_url-redirects'];
+        const idsToHide = ['tb_stores', 'tb_websites', 'tb_analytics', 'tb_blogs', 'tb_wordpress-v2', 'tb_clientportal', 'tb_url-redirects', 'tb_sites-domain-settings'];
         idsToHide.forEach(id => {
             const element = document.getElementById(id);
             if (element) {
