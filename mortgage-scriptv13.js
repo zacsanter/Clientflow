@@ -58,7 +58,7 @@ if (window.location.href.indexOf("/dashboard") > -1) {
     }
 }
 
-  function updateOpportunitiesContent() {
+   function updateOpportunitiesContent() {
         // Change 'Opportunities' to 'Cases' in the title
         const titleElement = document.querySelector('.topmenu-navtitle');
         if (titleElement) {
@@ -127,11 +127,7 @@ if (window.location.href.indexOf("/dashboard") > -1) {
         // Change 'Create New Pipeline' to 'Create New Stage' in button
         const createPipelineButton = document.querySelector('.hl-btn.inline-flex.items-center');
         if (createPipelineButton) {
-            createPipelineButton.childNodes.forEach(node => {
-                if (node.nodeType === Node.TEXT_NODE) {
-                    node.textContent = node.textContent.replace(/Create new pipeline/i, 'Create new stage');
-                }
-            });
+            createPipelineButton.innerHTML = createPipelineButton.innerHTML.replace(/Create new pipeline/i, 'Create new stage');
         }
     }
 
