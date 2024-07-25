@@ -36,6 +36,11 @@
         }
     }
 
+    var quickActionsElement = document.getElementById("quickActions");
+    if (quickActionsElement) {
+        quickActionsElement.style.display = "none";
+    }
+
     function handleIframeMessage(event) {
         if (event.data === 'navigate_to_email_templates') {
             navigateToEmailTemplates();
