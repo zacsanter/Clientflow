@@ -85,6 +85,14 @@ function updateOpportunitiesContent() {
         if (addOpportunityElement) {
             addOpportunityElement.textContent = addOpportunityElement.textContent.replace(/Add opportunity/i, 'Add Case');
         }
+
+        // Change 'opportunities' to 'cases' in class 'count'
+        const countElements = document.querySelectorAll('.count');
+        countElements.forEach(element => {
+            if (/opportunities/i.test(element.textContent)) {
+                element.textContent = element.textContent.replace(/(\d+)\s*opportunities/i, '$1 cases');
+            }
+        });
     }
 
     new MutationObserver(() => {
