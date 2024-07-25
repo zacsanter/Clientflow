@@ -13,7 +13,12 @@
         'sb_reputation': 'https://uploads-ssl.webflow.com/64b5377d6986a8653501c06c/669eabcca907b2cdb7d70ca8_CF%20Icon%20-%20Reputation v3.svg',
         'sb_location-mobile-app': 'https://uploads-ssl.webflow.com/64b5377d6986a8653501c06c/669ea7266da273956fa99558_CF%20Icon%20-%20Mobile App v3.svg'
     };
-    const hideIDs = ['sb_reporting', 'sb_app-media', 'sb_automation', 'sb_memberships'];
+    const hideIDs = {
+        'payments': ['tb_payment-orders-new', 'tb_payment-subscriptions', 'tb_payment-links'],
+        'marketing': ['tb_affiliate-manager'],
+        'funnels-websites': ['tb_stores', 'tb_websites', 'tb_analytics', 'tb_blogs', 'tb_wordpress-v2', 'tb_clientportal', 'tb_url-redirects', 'tb_sites-domain-settings'],
+        'reputation': ['tb_online-listings']
+    };
     let changesApplied = false;
 
     function getCurrentSubaccountID() {
@@ -46,7 +51,6 @@
         const marketingLink = document.querySelector('a[href*="/marketing"]');
         if (marketingLink) {
             marketingLink.click();
-            
             const observer = new MutationObserver((mutations, observer) => {
                 const templatesLink = document.querySelector('a[href*="/marketing/emails/all"]');
                 if (templatesLink) {
@@ -66,7 +70,6 @@
         const conversationsLink = document.querySelector('a[href*="/conversations"]');
         if (conversationsLink) {
             conversationsLink.click();
-            
             const observer = new MutationObserver((mutations, observer) => {
                 const templatesLink = document.querySelector('a[href*="/conversations/templates"]');
                 if (templatesLink) {
@@ -81,6 +84,26 @@
             });
         }
     }
+
+    window.addEventListener('message', handleIframeMessage, false);
+
+    const observer = new MutationObserver((mutations) => {
+        mutations.forEach((mutation) => {
+            mutation.addedNodes.forEach((node) => {
+                if (node.tagName === 'IFRAME' && node.src.includes('clientflow.ai')) {
+                    node.addEventListener('load', () => {
+                        console.log('Iframe loaded and ready to send messages.');
+                    });
+                    observer.disconnect();
+                }
+            });
+        });
+    });
+
+    observer.observe(document.body, {
+        childList: true,
+        subtree: true
+    });
 
     function createPopupContainer(popupId, iframeSrc, iframeTitle, height) {
         const overlay = document.createElement('div');
@@ -146,6 +169,24 @@
     }
 
     window.addEventListener('message', handleIframeMessage, false);
+
+    const observer2 = new MutationObserver((mutations) => {
+        mutations.forEach((mutation) => {
+            mutation.addedNodes.forEach((node) => {
+                if (node.tagName === 'IFRAME' && node.src.includes('clientflow.ai')) {
+                    node.addEventListener('load', () => {
+                        console.log('Iframe loaded and ready to send messages.');
+                    });
+                    observer2.disconnect();
+                }
+            });
+        });
+    });
+
+    observer2.observe(document.body, {
+        childList: true,
+        subtree: true
+    });
 
     function updateTitle() {
         const titleElement = document.querySelector('.topmenu-navtitle');
@@ -242,6 +283,30 @@
         });
     }
 
+    function hideElements() {
+        const currentSection = window.location.href;
+        let section = '';
+
+        if (currentSection.indexOf('/payments') > -1) {
+            section = 'payments';
+        } else if (currentSection.indexOf('/marketing') > -1) {
+            section = 'marketing';
+        } else if (currentSection.indexOf('/funnels-websites') > -1) {
+            section = 'funnels-websites';
+        } else if (currentSection.indexOf('/reputation') > -1) {
+            section = 'reputation';
+        }
+
+        if (section && hideIDs[section]) {
+            hideIDs[section].forEach(id => {
+                const element = document.getElementById(id);
+                if (element) {
+                    element.style.display = 'none';
+                }
+            });
+        }
+    }
+
     function replaceText() {
         const sidebar = document.querySelector('#sidebar-v2');
         let textChanged = false;
@@ -309,15 +374,6 @@
         });
     }
 
-    function hideElements() {
-        hideIDs.forEach(id => {
-            const element = document.querySelector(`#${id}`);
-            if (element) {
-                element.style.display = 'none';
-            }
-        });
-    }
-
     function reorderMenu() {
         const nav = document.querySelector('nav.flex-1');
         const aboveDividerIds = ['sb_payments', 'sb_contacts', 'sb_calendars', 'sb_conversations', 'sb_opportunities', 'sb_dashboard'];
@@ -370,8 +426,11 @@
         });
     }
 
-    const observer = new MutationObserver(handleMutation);
-    observer.observe(document.body, { childList: true, subtree: true });
+    const observer3 = new MutationObserver(handleMutation);
+
+    observer3.observe(document.body, { childList: true, subtree: true });
+
+    applyChanges();
 
     new MutationObserver(() => {
         if (window.location.href.indexOf("/dashboard") > -1) {
@@ -399,7 +458,7 @@
                 if (window.location.href.indexOf("/opportunities") > -1) {
                     updateOpportunitiesContent();
                 } else if (window.location.href.indexOf("/conversations/templates") > -1) {
-                    // Nothing to hide here anymore
+                    // No specific updates for this section
                 } else if (window.location.href.indexOf("/conversations") > -1) {
                     updateConversationsContent();
                 } else if (window.location.href.indexOf("/payments") > -1) {
@@ -429,7 +488,7 @@
         if (window.location.href.indexOf("/opportunities") > -1) {
             updateOpportunitiesContent();
         } else if (window.location.href.indexOf("/conversations/templates") > -1) {
-            // Nothing to hide here anymore
+            // No specific updates for this section
         } else if (window.location.href.indexOf("/conversations") > -1) {
             updateConversationsContent();
         } else if (window.location.href.indexOf("/payments") > -1) {
@@ -448,6 +507,4 @@
             updateTitle();
         }
     }
-
-    applyChanges();
 })();
