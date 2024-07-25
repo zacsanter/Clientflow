@@ -1,5 +1,5 @@
 (function() {
-    const specificIDs = ['39vAwlFCldUFvMyCtKGy'];
+    const specificIDs = ['ebN44ZZDqKXacptD3Rm7'];
     const iconUrls = {
         'sb_dashboard': 'https://uploads-ssl.webflow.com/64b5377d6986a8653501c06c/669e9d19b05ac2e0b2a515b7_CF%20Icon%20-%20Home_1.svg',
         'sb_conversations': 'https://uploads-ssl.webflow.com/64b5377d6986a8653501c06c/669e9d86cca54ae22933ebec_CF%20Icon%20-%20Messages.svg',
@@ -14,12 +14,7 @@
         'sb_location-mobile-app': 'https://uploads-ssl.webflow.com/64b5377d6986a8653501c06c/669ea7266da273956fa99558_CF%20Icon%20-%20Mobile App v3.svg'
     };
     const hideIDs = ['sb_reporting', 'sb_app-media', 'sb_automation', 'sb_memberships'];
-    const hideSectionIDs = {
-        'payments': ['tb_payment-orders-new', 'tb_payment-subscriptions', 'tb_payment-links'],
-        'marketing': ['tb_affiliate-manager'],
-        'funnels-websites': ['tb_stores', 'tb_websites', 'tb_analytics', 'tb_blogs', 'tb_wordpress-v2', 'tb_clientportal', 'tb_url-redirects', 'tb_sites-domain-settings'],
-        'reputation': ['tb_online-listings']
-    };
+
     let changesApplied = false;
 
     function getCurrentSubaccountID() {
@@ -34,11 +29,6 @@
             titleElement.textContent = 'Home';
             titleElement.style.opacity = 1;
         }
-    }
-
-    var quickActionsElement = document.getElementById("quickActions");
-    if (quickActionsElement) {
-        quickActionsElement.style.display = "none";
     }
 
     function handleIframeMessage(event) {
@@ -64,10 +54,7 @@
                     observer.disconnect();
                 }
             });
-            observer.observe(document.body, {
-                childList: true,
-                subtree: true
-            });
+            observer.observe(document.body, { childList: true, subtree: true });
         }
     }
 
@@ -82,12 +69,11 @@
                     observer.disconnect();
                 }
             });
-            observer.observe(document.body, {
-                childList: true,
-                subtree: true
-            });
+            observer.observe(document.body, { childList: true, subtree: true });
         }
     }
+
+    window.addEventListener('message', handleIframeMessage, false);
 
     function createPopupContainer(popupId, iframeSrc, iframeTitle, height) {
         const overlay = document.createElement('div');
@@ -270,7 +256,7 @@
     }
 
     function hidePaymentsIDs() {
-        const idsToHide = hideSectionIDs['payments'];
+        const idsToHide = ['tb_payment-orders-new', 'tb_payment-subscriptions', 'tb_payment-links'];
         idsToHide.forEach(id => {
             const element = document.getElementById(id);
             if (element) {
@@ -280,7 +266,7 @@
     }
 
     function hideMarketingIDs() {
-        const idsToHide = hideSectionIDs['marketing'];
+        const idsToHide = ['tb_affiliate-manager'];
         idsToHide.forEach(id => {
             const element = document.getElementById(id);
             if (element) {
@@ -290,7 +276,7 @@
     }
 
     function hideFunnelsWebsitesIDs() {
-        const idsToHide = hideSectionIDs['funnels-websites'];
+        const idsToHide = ['tb_stores', 'tb_websites', 'tb_analytics', 'tb_blogs', 'tb_wordpress-v2', 'tb_clientportal', 'tb_url-redirects', 'tb_sites-domain-settings'];
         idsToHide.forEach(id => {
             const element = document.getElementById(id);
             if (element) {
@@ -300,7 +286,7 @@
     }
 
     function hideReputationIDs() {
-        const idsToHide = hideSectionIDs['reputation'];
+        const idsToHide = ['tb_online-listings'];
         idsToHide.forEach(id => {
             const element = document.getElementById(id);
             if (element) {
@@ -309,28 +295,77 @@
         });
     }
 
+    function hideQuickActions() {
+        const quickActionsElement = document.querySelector('.sidebar-v2-location #sidebar-v2 #quickActions');
+        if (quickActionsElement) {
+            quickActionsElement.style.display = 'none';
+        }
+    }
+
     function observeChanges() {
-        const observer4 = new MutationObserver(() => {
+        const observer = new MutationObserver(() => {
             if (specificIDs.includes(getCurrentSubaccountID())) {
                 if (window.location.href.indexOf("/opportunities") > -1) {
                     updateOpportunitiesContent();
+                    hideQuickActions();
                 } else if (window.location.href.indexOf("/conversations") > -1) {
                     updateConversationsContent();
+                    hideQuickActions();
                 } else if (window.location.href.indexOf("/payments") > -1) {
                     hidePaymentsIDs();
+                    updateTitle();
+                    hideQuickActions();
                 } else if (window.location.href.indexOf("/marketing") > -1) {
                     hideMarketingIDs();
+                    updateTitle();
+                    hideQuickActions();
                 } else if (window.location.href.indexOf("/funnels-websites") > -1) {
                     hideFunnelsWebsitesIDs();
+                    updateTitle();
+                    hideQuickActions();
                 } else if (window.location.href.indexOf("/reputation") > -1) {
                     hideReputationIDs();
+                    updateTitle();
+                    hideQuickActions();
+                } else {
+                    updateTitle(); // Update title for other sections
+                    hideQuickActions();
                 }
-                updateTitle();
-                hideElements();
             }
         });
 
-        observer4.observe(document.body, { attributes: true, subtree: true, childList: true });
+        observer.observe(document.body, { attributes: true, subtree: true, childList: true });
+    }
+
+    observeChanges();
+
+    if (specificIDs.includes(getCurrentSubaccountID())) {
+        if (window.location.href.indexOf("/opportunities") > -1) {
+            updateOpportunitiesContent();
+            hideQuickActions();
+        } else if (window.location.href.indexOf("/conversations") > -1) {
+            updateConversationsContent();
+            hideQuickActions();
+        } else if (window.location.href.indexOf("/payments") > -1) {
+            hidePaymentsIDs();
+            updateTitle();
+            hideQuickActions();
+        } else if (window.location.href.indexOf("/marketing") > -1) {
+            hideMarketingIDs();
+            updateTitle();
+            hideQuickActions();
+        } else if (window.location.href.indexOf("/funnels-websites") > -1) {
+            hideFunnelsWebsitesIDs();
+            updateTitle();
+            hideQuickActions();
+        } else if (window.location.href.indexOf("/reputation") > -1) {
+            hideReputationIDs();
+            updateTitle();
+            hideQuickActions();
+        } else {
+            updateTitle(); // Update title for other sections
+            hideQuickActions();
+        }
     }
 
     function replaceText() {
@@ -409,32 +444,11 @@
         });
     }
 
-    function reorderMenu() {
-        const nav = document.querySelector('nav.flex-1');
-        const aboveDividerIds = ['sb_payments', 'sb_contacts', 'sb_calendars', 'sb_conversations', 'sb_opportunities', 'sb_dashboard'];
-        const belowDividerIds = ['sb_email-marketing', 'sb_sites', 'sb_reputation', 'sb_location-mobile-app', '4ef91dc6-9fa4-415e-96a9-9a15a298d5d9'];
-
-        aboveDividerIds.forEach(id => {
-            const element = document.getElementById(id);
-            if (element) {
-                nav.insertBefore(element, nav.firstChild);
-            }
-        });
-
-        belowDividerIds.forEach(id => {
-            const element = document.getElementById(id);
-            if (element) {
-                nav.appendChild(element);
-            }
-        });
-    }
-
     function applyChanges() {
         if (specificIDs.includes(getCurrentSubaccountID()) && !changesApplied) {
             const textUpdated = replaceText();
             const allImagesUpdated = changeImage();
             hideElements();
-            reorderMenu();
             replaceFontAwesomeIcons();
 
             if (textUpdated && allImagesUpdated) {
@@ -461,9 +475,7 @@
         });
     }
 
-    const observer5 = new MutationObserver(handleMutation);
-    observer5.observe(document.body, { childList: true, subtree: true });
-
+    const observer = new MutationObserver(handleMutation);
+    observer.observe(document.body, { childList: true, subtree: true });
     applyChanges();
-    observeChanges();
 })();
