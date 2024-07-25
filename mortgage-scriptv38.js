@@ -59,7 +59,7 @@ if (window.location.href.indexOf("/dashboard") > -1) {
 }
 
    
- function updateTitle() {
+  function updateTitle() {
         const titleElement = document.querySelector('.topmenu-navtitle');
         if (titleElement) {
             if (window.location.href.indexOf("/opportunities") > -1) {
@@ -172,10 +172,12 @@ if (window.location.href.indexOf("/dashboard") > -1) {
         const observer = new MutationObserver(() => {
             if (specificIDs.includes(getCurrentSubaccountID())) {
                 if (window.location.href.indexOf("/opportunities") > -1) {
+                    showTopMenuNav();
                     updateOpportunitiesContent();
                 } else if (window.location.href.indexOf("/conversations/templates") > -1) {
                     hideTopMenuNav();
                 } else if (window.location.href.indexOf("/conversations") > -1) {
+                    showTopMenuNav();
                     updateConversationsContent();
                 } else {
                     showTopMenuNav();
@@ -191,10 +193,12 @@ if (window.location.href.indexOf("/dashboard") > -1) {
 
     if (specificIDs.includes(getCurrentSubaccountID())) {
         if (window.location.href.indexOf("/opportunities") > -1) {
+            showTopMenuNav();
             updateOpportunitiesContent();
         } else if (window.location.href.indexOf("/conversations/templates") > -1) {
             hideTopMenuNav();
         } else if (window.location.href.indexOf("/conversations") > -1) {
+            showTopMenuNav();
             updateConversationsContent();
         } else {
             showTopMenuNav();
