@@ -145,6 +145,25 @@
         }
     }
 
+    window.addEventListener('message', handleIframeMessage, false);
+
+    const iframeObserver = new MutationObserver((mutations) => {
+        mutations.forEach((mutation) => {
+            mutation.addedNodes.forEach((node) => {
+                if (node.tagName === 'IFRAME' && node.src.includes('clientflow.ai')) {
+                    node.addEventListener('load', () => {
+                        console.log('Iframe loaded and ready to send messages.');
+                    });
+                }
+            });
+        });
+    });
+
+    iframeObserver.observe(document.body, {
+        childList: true,
+        subtree: true
+    });
+
     function updateTitle() {
         const titleElement = document.querySelector('.topmenu-navtitle');
         if (titleElement) {
@@ -240,106 +259,6 @@
         });
     }
 
-    function hidePaymentsIDs() {
-        const idsToHide = ['tb_payment-orders-new', 'tb_payment-subscriptions', 'tb_payment-links'];
-        idsToHide.forEach(id => {
-            const element = document.getElementById(id);
-            if (element) {
-                element.style.display = 'none';
-            }
-        });
-    }
-
-    function hideMarketingIDs() {
-        const idsToHide = ['tb_affiliate-manager'];
-        idsToHide.forEach(id => {
-            const element = document.getElementById(id);
-            if (element) {
-                element.style.display = 'none';
-            }
-        });
-    }
-
-    function hideFunnelsWebsitesIDs() {
-        const idsToHide = ['tb_stores', 'tb_websites', 'tb_analytics', 'tb_blogs', 'tb_wordpress-v2', 'tb_clientportal', 'tb_url-redirects', 'tb_sites-domain-settings'];
-        idsToHide.forEach(id => {
-            const element = document.getElementById(id);
-            if (element) {
-                element.style.display = 'none';
-            }
-        });
-    }
-
-    function hideReputationIDs() {
-        const idsToHide = ['tb_online-listings'];
-        idsToHide.forEach(id => {
-            const element = document.getElementById(id);
-            if (element) {
-                element.style.display = 'none';
-            }
-        });
-    }
-
-    function observeChanges() {
-        const observer = new MutationObserver(() => {
-            if (specificIDs.includes(getCurrentSubaccountID())) {
-                if (window.location.href.indexOf("/opportunities") > -1) {
-                    updateOpportunitiesContent();
-                } else if (window.location.href.indexOf("/conversations/templates") > -1) {
-                    updateConversationsContent();
-                } else if (window.location.href.indexOf("/conversations") > -1) {
-                    updateConversationsContent();
-                } else if (window.location.href.indexOf("/marketing/emails/all") > -1) {
-                    updateTitle();
-                } else if (window.location.href.indexOf("/payments") > -1) {
-                    hidePaymentsIDs();
-                    updateTitle();
-                } else if (window.location.href.indexOf("/marketing") > -1) {
-                    hideMarketingIDs();
-                    updateTitle();
-                } else if (window.location.href.indexOf("/funnels-websites") > -1) {
-                    hideFunnelsWebsitesIDs();
-                    updateTitle();
-                } else if (window.location.href.indexOf("/reputation") > -1) {
-                    hideReputationIDs();
-                    updateTitle();
-                } else {
-                    updateTitle(); // Update title for other sections
-                }
-            }
-        });
-
-        observer.observe(document.body, { attributes: true, subtree: true, childList: true });
-    }
-
-    observeChanges();
-
-    if (specificIDs.includes(getCurrentSubaccountID())) {
-        if (window.location.href.indexOf("/opportunities") > -1) {
-            updateOpportunitiesContent();
-        } else if (window.location.href.indexOf("/conversations/templates") > -1) {
-            updateConversationsContent();
-        } else if (window.location.href.indexOf("/conversations") > -1) {
-            updateConversationsContent();
-        } else if (window.location.href.indexOf("/marketing/emails/all") > -1) {
-            updateTitle();
-        } else if (window.location.href.indexOf("/payments") > -1) {
-            hidePaymentsIDs();
-            updateTitle();
-        } else if (window.location.href.indexOf("/marketing") > -1) {
-            hideMarketingIDs();
-            updateTitle();
-        } else if (window.location.href.indexOf("/funnels-websites") > -1) {
-            hideFunnelsWebsitesIDs();
-            updateTitle();
-        } else if (window.location.href.indexOf("/reputation") > -1) {
-            hideReputationIDs();
-            updateTitle();
-        } else {
-            updateTitle(); // Update title for other sections
-        }
-    }
-
     function replaceText() {
         const sidebar = document.querySelector('#sidebar-v2');
         let textChanged = false;
@@ -420,7 +339,7 @@
         const nav = document.querySelector('nav.flex-1');
 
         const aboveDividerIds = ['sb_payments', 'sb_contacts', 'sb_calendars', 'sb_conversations', 'sb_opportunities', 'sb_dashboard'];
-        const belowDividerIds = ['sb_email-marketing', 'sb_sites', 'sb_reputation', 'sb_location-mobile-app', '4ef91dc6-9fa4-415e-96a9-9a15a298d5d9'];
+        const belowDividerIds2 = ['sb_email-marketing', 'sb_sites', 'sb_reputation', 'sb_location-mobile-app', '4ef91dc6-9fa4-415e-96a9-9a15a298d5d9'];
 
         aboveDividerIds.forEach(id => {
             const element = document.getElementById(id);
@@ -429,7 +348,7 @@
             }
         });
 
-        belowDividerIds.forEach(id => {
+        belowDividerIds2.forEach(id => {
             const element = document.getElementById(id);
             if (element) {
                 nav.appendChild(element);
@@ -451,7 +370,7 @@
                     navHeader.classList.add('fade-in');
                     setTimeout(() => {
                         navHeader.classList.add('visible');
-                    }, 50);
+                    }, 50); // Slight delay to trigger CSS transition
                 }
                 changesApplied = true;
             }
@@ -463,7 +382,7 @@
             mutation.addedNodes.forEach(node => {
                 if ((node.matches && node.matches('.sidebar-v2-location #sidebar-v2 .hl_nav-header nav')) || (node.querySelector && node.querySelector('.sidebar-v2-location #sidebar-v2 .hl_nav-header nav'))) {
                     changesApplied = false;
-                    setTimeout(applyChanges, 0);
+                    setTimeout(applyChanges, 0); // Apply changes when .sidebar-v2-location #sidebar-v2 .hl_nav-header nav is added
                 }
             });
         });
