@@ -58,7 +58,7 @@ if (window.location.href.indexOf("/dashboard") > -1) {
     }
 }
 
-function updateOpportunitiesContent() {
+ function updateOpportunitiesContent() {
         // Change 'Opportunities' to 'Cases' in the title
         const titleElement = document.querySelector('.topmenu-navtitle');
         if (titleElement) {
@@ -93,6 +93,24 @@ function updateOpportunitiesContent() {
                 element.textContent = element.textContent.replace(/(\d+)\s*opportunities/i, '$1 cases');
             }
         });
+
+        // Change 'Add new opportunity' to 'Add new case' in class 'title'
+        const newTitleElement = document.querySelector('.title');
+        if (newTitleElement) {
+            newTitleElement.textContent = newTitleElement.textContent.replace(/Add new opportunity/i, 'Add new case');
+        }
+
+        // Change 'Create new opportunity...' to 'Create new case...' in class 'description'
+        const descriptionElement = document.querySelector('.description');
+        if (descriptionElement) {
+            descriptionElement.textContent = descriptionElement.textContent.replace(/Create new opportunity by filling in details and selecting a contact/i, 'Create new case by filling in details and selecting a contact');
+        }
+
+        // Change 'You can now have different owner for contact and opportunity.' to 'You can now have different owner for contact and case.' in class 'pb-3'
+        const pb3Element = document.querySelector('.pb-3');
+        if (pb3Element) {
+            pb3Element.textContent = pb3Element.textContent.replace(/You can now have different owner for contact and opportunity./i, 'You can now have different owner for contact and case.');
+        }
     }
 
     new MutationObserver(() => {
