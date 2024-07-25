@@ -58,14 +58,14 @@ if (window.location.href.indexOf("/dashboard") > -1) {
     }
 }
 
- function updateOpportunitiesContent() {
-        // Change 'Opportunities' to 'Cases' in the title
+  function updateOpportunitiesContent() {
+        // Step 1
         const titleElement = document.querySelector('.topmenu-navtitle');
         if (titleElement) {
             titleElement.textContent = titleElement.textContent.replace(/Opportunities/i, 'Cases');
         }
 
-        // Change 'Opportunities' to 'Cases' in span class 'flex items-center'
+        // Step 2
         const itemsCenterElements = document.querySelectorAll('.flex.items-center span');
         itemsCenterElements.forEach(element => {
             if (/Opportunities/i.test(element.textContent)) {
@@ -73,20 +73,20 @@ if (window.location.href.indexOf("/dashboard") > -1) {
             }
         });
 
-        // Change 'Pipelines' to 'Stages' in span class 'flex items-center'
+        // Step 3
         itemsCenterElements.forEach(element => {
             if (/Pipelines/i.test(element.textContent)) {
                 element.textContent = element.textContent.replace(/Pipelines/i, 'Stages');
             }
         });
 
-        // Change 'Add Opportunity' to 'Add Case' in class 'add-opportunity'
+        // Step 4
         const addOpportunityElement = document.querySelector('.add-opportunity');
         if (addOpportunityElement) {
             addOpportunityElement.textContent = addOpportunityElement.textContent.replace(/Add opportunity/i, 'Add Case');
         }
 
-        // Change 'opportunities' to 'cases' in class 'count'
+        // Step 5
         const countElements = document.querySelectorAll('.count');
         countElements.forEach(element => {
             if (/opportunities/i.test(element.textContent)) {
@@ -94,53 +94,59 @@ if (window.location.href.indexOf("/dashboard") > -1) {
             }
         });
 
-        // Change 'Add new opportunity' to 'Add new case' in class 'title'
+        // Step 6
         const newTitleElement = document.querySelector('.title');
         if (newTitleElement) {
             newTitleElement.textContent = newTitleElement.textContent.replace(/Add new opportunity/i, 'Add new case');
         }
 
-        // Change 'Create new opportunity...' to 'Create new case...' in class 'description'
+        // Step 7
         const descriptionElement = document.querySelector('.description');
         if (descriptionElement) {
             descriptionElement.textContent = descriptionElement.textContent.replace(/Create new opportunity by filling in details and selecting a contact/i, 'Create new case by filling in details and selecting a contact');
         }
 
-        // Change 'You can now have different owner for contact and opportunity.' to 'You can now have different owner for contact and case.' in class 'pb-3'
         const pb3Element = document.querySelector('.pb-3');
         if (pb3Element) {
             pb3Element.textContent = pb3Element.textContent.replace(/You can now have different owner for contact and opportunity./i, 'You can now have different owner for contact and case.');
         }
 
-        // Change 'Opportunity Details' to 'Case Details' in the specific button
+        // Step 8
         const opportunityDetailsButton = document.querySelector('.bg-blue-50.font-bold.text-blue-800.w-48.rounded.p-2.text-left.text-xs');
         if (opportunityDetailsButton) {
             opportunityDetailsButton.textContent = opportunityDetailsButton.textContent.replace(/Opportunity Details/i, 'Case Details');
         }
 
-        // Change 'Pipelines' to 'Stages' in h3 element
+        // Step 9
         const pipelineTitleElement = document.querySelector('.hl_controls--left.flex h3');
         if (pipelineTitleElement) {
             pipelineTitleElement.textContent = pipelineTitleElement.textContent.replace(/Pipelines/i, 'Stages');
         }
 
-        // Change 'Create New Pipeline' to 'Create New Stage' in button
+        // Step 10
         const createPipelineButton = document.querySelector('.hl-btn.inline-flex.items-center');
         if (createPipelineButton) {
-            createPipelineButton.innerHTML = createPipelineButton.innerHTML.replace(/Create new pipeline/i, 'Create new stage');
+            const textNode = Array.from(createPipelineButton.childNodes).find(node => node.nodeType === Node.TEXT_NODE && node.nodeValue.includes('Create new pipeline'));
+            if (textNode) {
+                textNode.nodeValue = textNode.nodeValue.replace(/Create new pipeline/i, 'Create new stage');
+            }
         }
     }
 
-    new MutationObserver(() => {
-        if (window.location.href.indexOf("/opportunities") > -1 && specificIDs.includes(getCurrentSubaccountID())) {
-            // Directly update content if elements are present
-            updateOpportunitiesContent();
-        }
-    }).observe(document.body, { attributes: true, subtree: true, childList: true });
+    function observeChanges() {
+        const observer = new MutationObserver(() => {
+            if (window.location.href.indexOf("/opportunities") > -1 && specificIDs.includes(getCurrentSubaccountID())) {
+                updateOpportunitiesContent();
+            }
+        });
+
+        observer.observe(document.body, { attributes: true, subtree: true, childList: true });
+    }
+
+    observeChanges();
 
     // Initial call to handle the case when the page is loaded directly on the opportunities
     if (window.location.href.indexOf("/opportunities") > -1 && specificIDs.includes(getCurrentSubaccountID())) {
-        // Directly update content if elements are present
         updateOpportunitiesContent();
     }
     
