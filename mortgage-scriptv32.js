@@ -75,7 +75,7 @@ if (window.location.href.indexOf("/dashboard") > -1) {
             } else if (window.location.href.indexOf("/marketing") > -1) {
                 titleElement.textContent = 'Marketing';
             } else if (window.location.href.indexOf("/funnels-websites") > -1) {
-                titleElement.textContent = 'Forms';
+                titleElement.textContent = 'Funnels & Forms';
             } else if (window.location.href.indexOf("/reputation") > -1) {
                 titleElement.textContent = 'Reviews';
             } else {
@@ -191,7 +191,7 @@ if (window.location.href.indexOf("/dashboard") > -1) {
         updateTitle();
 
         // Hide specific IDs in the funnels-websites section
-        const idsToHide = ['tb_funnels', 'tb_websites', 'tb_analytics', 'tb_blogs', 'tb_wordpress-v2', 'tb_clientportal', 'tb_url-redirects'];
+        const idsToHide = ['tb_websites', 'tb_analytics', 'tb_blogs', 'tb_stores', 'tb_wordpress-v2', 'tb_clientportal', 'tb_url-redirects', 'tb_sites-domain-settings'];
         idsToHide.forEach(id => {
             const element = document.getElementById(id);
             if (element) {
@@ -270,7 +270,7 @@ if (window.location.href.indexOf("/dashboard") > -1) {
                     .replace(/Conversations/g, 'Messages')
                     .replace(/Payments/g, 'Invoice & Sign')
                     .replace(/Reputation/g, 'Reviews')
-                    .replace(/Sites/g, 'Forms');
+                    .replace(/Sites/g, 'Funnels & Forms');
                 if (newText !== originalText) {
                     node.nodeValue = newText;
                     textChanged = true;
