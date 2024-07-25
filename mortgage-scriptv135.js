@@ -58,7 +58,7 @@ if (window.location.href.indexOf("/dashboard") > -1) {
     }
 }
 
-   function updateOpportunitiesContent() {
+ function updateOpportunitiesContent() {
         // Change 'Opportunities' to 'Cases' in the title
         const titleElement = document.querySelector('.topmenu-navtitle');
         if (titleElement) {
