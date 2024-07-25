@@ -33,6 +33,177 @@
     }
 }
 
+    function handleIframeMessage(event) {
+    if (event.data === 'navigate_to_email_templates') {
+        navigateToEmailTemplates();
+    } else if (event.data === 'navigate_to_text_templates') {
+        navigateToTextTemplates();
+    }
+}
+
+function navigateToEmailTemplates() {
+    // Find and click the sidebar link for Marketing
+    const marketingLink = document.querySelector('a[href*="/marketing"]');
+    if (marketingLink) {
+        marketingLink.click();
+        
+        // Wait for the top bar to update and then click the Templates link under Emails
+        const observer = new MutationObserver((mutations, observer) => {
+            const templatesLink = document.querySelector('a[href*="/marketing/emails/all"]');
+            if (templatesLink) {
+                templatesLink.click();
+                observer.disconnect(); // Stop observing once the link is found and clicked
+            }
+        });
+
+        observer.observe(document.body, {
+            childList: true,
+            subtree: true
+        });
+    }
+}
+
+function navigateToTextTemplates() {
+    // Find and click the sidebar link for Conversations/Messages
+    const conversationsLink = document.querySelector('a[href*="/conversations"]');
+    if (conversationsLink) {
+        conversationsLink.click();
+        
+        // Wait for the top bar to update and then click the Templates (Snippets) link
+        const observer = new MutationObserver((mutations, observer) => {
+            const templatesLink = document.querySelector('a[href*="/conversations/templates"]');
+            if (templatesLink) {
+                templatesLink.click();
+                observer.disconnect(); // Stop observing once the link is found and clicked
+            }
+        });
+
+        observer.observe(document.body, {
+            childList: true,
+            subtree: true
+        });
+    }
+}
+
+window.addEventListener('message', handleIframeMessage, false);
+
+// MutationObserver to observe the body for added iframes
+const observer = new MutationObserver((mutations) => {
+    mutations.forEach((mutation) => {
+        mutation.addedNodes.forEach((node) => {
+            if (node.tagName === 'IFRAME' && node.src.includes('clientflow.ai')) {
+                node.addEventListener('load', () => {
+                    console.log('Iframe loaded and ready to send messages.');
+                });
+                observer.disconnect(); // Stop observing once the iframe is found and loaded
+            }
+        });
+    });
+});
+
+observer.observe(document.body, {
+    childList: true,
+    subtree: true
+});
+
+    function handleIframeMessage(event) {
+    if (event.data === 'open_newlead_popup') {
+        openNewLeadPopup();
+    } else if (event.data === 'open_remortgage_popup') {
+        openRemortgagePopup();
+    }
+}
+
+function createPopupContainer(popupId, iframeSrc, iframeTitle, height) {
+    // Create the overlay element
+    const overlay = document.createElement('div');
+    overlay.id = `popup-overlay-${popupId}`;
+    overlay.style.cssText = 'position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); z-index: 9998; display: flex; justify-content: center; align-items: center;';
+    overlay.onclick = () => closePopup(popupId);
+    document.body.appendChild(overlay);
+
+    // Create the container for iframe and close button
+    const popupContainer = document.createElement('div');
+    popupContainer.id = `popup-container-${popupId}`;
+    popupContainer.style.cssText = `position: relative; width: 700px; height: ${height}px; max-height: 90%; background: white; border-radius: 20px; display: flex; flex-direction: column; justify-content: center; align-items: center;`;
+    overlay.appendChild(popupContainer);
+
+    // Create the iframe popup element
+    const popupIframe = document.createElement('iframe');
+    popupIframe.src = iframeSrc;
+    popupIframe.style.cssText = 'width: 100%; height: 100%; border: none; border-radius: 20px;';
+    popupIframe.id = `popup-${popupId}`;
+    popupIframe.title = iframeTitle;
+    popupContainer.appendChild(popupIframe);
+
+    // Create the close button
+    const closeBtn = document.createElement('button');
+    closeBtn.id = `popup-close-btn-${popupId}`;
+    closeBtn.innerHTML = '&times;';
+    closeBtn.style.cssText = 'position: absolute; top: 10px; right: 20px; z-index: 10000; background: transparent; border: none; font-size: 24px; font-weight: bold; color: black; cursor: pointer;';
+    closeBtn.onclick = () => closePopup(popupId);
+    popupContainer.appendChild(closeBtn);
+}
+
+function openNewLeadPopup() {
+    const popupContainer = document.getElementById('popup-container-newlead');
+    const overlay = document.getElementById('popup-overlay-newlead');
+
+    if (popupContainer && overlay) {
+        popupContainer.style.display = 'flex';
+        overlay.style.display = 'flex';
+    } else {
+        createPopupContainer('newlead', 'https://api.clientflow.ai/widget/form/Hpix7Xq0muUZmlINd37c', 'Manual Input', 865);
+    }
+}
+
+function openRemortgagePopup() {
+    const popupContainer = document.getElementById('popup-container-remortgage');
+    const overlay = document.getElementById('popup-overlay-remortgage');
+
+    if (popupContainer && overlay) {
+        popupContainer.style.display = 'flex';
+        overlay.style.display = 'flex';
+    } else {
+        createPopupContainer('remortgage', 'https://api.clientflow.ai/widget/form/ZN684guea1XfjJg3OIdT', 'New Remortgage Clients', 410);
+    }
+}
+
+function closePopup(popupId) {
+    const popupContainer = document.getElementById(`popup-container-${popupId}`);
+    const overlay = document.getElementById(`popup-overlay-${popupId}`);
+
+    if (popupContainer) {
+        popupContainer.style.display = 'none';
+    }
+    if (overlay) {
+        overlay.style.display = 'none';
+    }
+}
+
+window.addEventListener('message', handleIframeMessage, false);
+
+// MutationObserver to observe the body for added iframes
+const observer = new MutationObserver((mutations) => {
+    mutations.forEach((mutation) => {
+        mutation.addedNodes.forEach((node) => {
+            if (node.tagName === 'IFRAME' && node.src.includes('clientflow.ai')) {
+                node.addEventListener('load', () => {
+                    console.log('Iframe loaded and ready to send messages.');
+                });
+                observer.disconnect(); // Stop observing once the iframe is found and loaded
+            }
+        });
+    });
+});
+
+observer.observe(document.body, {
+    childList: true,
+    subtree: true
+});
+
+    
+
 new MutationObserver(() => {
     if (window.location.href.indexOf("/dashboard") > -1) {
         // Directly update title without fading if element is present
