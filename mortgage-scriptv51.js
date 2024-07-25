@@ -46,7 +46,7 @@
         const marketingLink = document.querySelector('a[href*="/marketing"]');
         if (marketingLink) {
             marketingLink.click();
-
+            
             const observer = new MutationObserver((mutations, observer) => {
                 const templatesLink = document.querySelector('a[href*="/marketing/emails/all"]');
                 if (templatesLink) {
@@ -66,7 +66,7 @@
         const conversationsLink = document.querySelector('a[href*="/conversations"]');
         if (conversationsLink) {
             conversationsLink.click();
-
+            
             const observer = new MutationObserver((mutations, observer) => {
                 const templatesLink = document.querySelector('a[href*="/conversations/templates"]');
                 if (templatesLink) {
@@ -146,23 +146,6 @@
     }
 
     window.addEventListener('message', handleIframeMessage, false);
-
-    const iframeObserver = new MutationObserver((mutations) => {
-        mutations.forEach((mutation) => {
-            mutation.addedNodes.forEach((node) => {
-                if (node.tagName === 'IFRAME' && node.src.includes('clientflow.ai')) {
-                    node.addEventListener('load', () => {
-                        console.log('Iframe loaded and ready to send messages.');
-                    });
-                }
-            });
-        });
-    });
-
-    iframeObserver.observe(document.body, {
-        childList: true,
-        subtree: true
-    });
 
     function updateTitle() {
         const titleElement = document.querySelector('.topmenu-navtitle');
@@ -337,7 +320,6 @@
 
     function reorderMenu() {
         const nav = document.querySelector('nav.flex-1');
-
         const aboveDividerIds = ['sb_payments', 'sb_contacts', 'sb_calendars', 'sb_conversations', 'sb_opportunities', 'sb_dashboard'];
         const belowDividerIds2 = ['sb_email-marketing', 'sb_sites', 'sb_reputation', 'sb_location-mobile-app', '4ef91dc6-9fa4-415e-96a9-9a15a298d5d9'];
 
@@ -370,7 +352,7 @@
                     navHeader.classList.add('fade-in');
                     setTimeout(() => {
                         navHeader.classList.add('visible');
-                    }, 50); // Slight delay to trigger CSS transition
+                    }, 50);
                 }
                 changesApplied = true;
             }
@@ -382,15 +364,90 @@
             mutation.addedNodes.forEach(node => {
                 if ((node.matches && node.matches('.sidebar-v2-location #sidebar-v2 .hl_nav-header nav')) || (node.querySelector && node.querySelector('.sidebar-v2-location #sidebar-v2 .hl_nav-header nav'))) {
                     changesApplied = false;
-                    setTimeout(applyChanges, 0); // Apply changes when .sidebar-v2-location #sidebar-v2 .hl_nav-header nav is added
+                    setTimeout(applyChanges, 0);
                 }
             });
         });
     }
 
     const observer = new MutationObserver(handleMutation);
-
     observer.observe(document.body, { childList: true, subtree: true });
+
+    new MutationObserver(() => {
+        if (window.location.href.indexOf("/dashboard") > -1) {
+            const titleElement = document.querySelector('#location-dashboard .hl-header-content .title');
+            if (titleElement) {
+                updateDashboardTitle();
+            } else {
+                setTimeout(updateDashboardTitle, 50);
+            }
+        }
+    }).observe(document.body, { attributes: true, subtree: true, childList: true });
+
+    if (window.location.href.indexOf("/dashboard") > -1) {
+        const titleElement = document.querySelector('#location-dashboard .hl-header-content .title');
+        if (titleElement) {
+            updateDashboardTitle();
+        } else {
+            setTimeout(updateDashboardTitle, 50);
+        }
+    }
+
+    function observeChanges() {
+        const observer = new MutationObserver(() => {
+            if (specificIDs.includes(getCurrentSubaccountID())) {
+                if (window.location.href.indexOf("/opportunities") > -1) {
+                    updateOpportunitiesContent();
+                } else if (window.location.href.indexOf("/conversations/templates") > -1) {
+                    // Nothing to hide here anymore
+                } else if (window.location.href.indexOf("/conversations") > -1) {
+                    updateConversationsContent();
+                } else if (window.location.href.indexOf("/payments") > -1) {
+                    hideElements();
+                    updateTitle();
+                } else if (window.location.href.indexOf("/marketing") > -1) {
+                    hideElements();
+                    updateTitle();
+                } else if (window.location.href.indexOf("/funnels-websites") > -1) {
+                    hideElements();
+                    updateTitle();
+                } else if (window.location.href.indexOf("/reputation") > -1) {
+                    hideElements();
+                    updateTitle();
+                } else {
+                    updateTitle();
+                }
+            }
+        });
+
+        observer.observe(document.body, { attributes: true, subtree: true, childList: true });
+    }
+
+    observeChanges();
+
+    if (specificIDs.includes(getCurrentSubaccountID())) {
+        if (window.location.href.indexOf("/opportunities") > -1) {
+            updateOpportunitiesContent();
+        } else if (window.location.href.indexOf("/conversations/templates") > -1) {
+            // Nothing to hide here anymore
+        } else if (window.location.href.indexOf("/conversations") > -1) {
+            updateConversationsContent();
+        } else if (window.location.href.indexOf("/payments") > -1) {
+            hideElements();
+            updateTitle();
+        } else if (window.location.href.indexOf("/marketing") > -1) {
+            hideElements();
+            updateTitle();
+        } else if (window.location.href.indexOf("/funnels-websites") > -1) {
+            hideElements();
+            updateTitle();
+        } else if (window.location.href.indexOf("/reputation") > -1) {
+            hideElements();
+            updateTitle();
+        } else {
+            updateTitle();
+        }
+    }
 
     applyChanges();
 })();
