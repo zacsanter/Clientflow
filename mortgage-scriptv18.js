@@ -146,6 +146,34 @@ if (window.location.href.indexOf("/dashboard") > -1) {
     if (window.location.href.indexOf("/opportunities") > -1 && specificIDs.includes(getCurrentSubaccountID())) {
         updateOpportunitiesContent();
     }
+
+// Messages
+
+    function updateConversationsContent() {
+        // Change 'Conversations' to 'Messages' in the title
+        const titleElement = document.querySelector('.topmenu-navtitle');
+        if (titleElement) {
+            titleElement.textContent = titleElement.textContent.replace(/Conversations/i, 'Messages');
+        }
+    }
+
+    function observeChanges() {
+        const observer = new MutationObserver(() => {
+            if (window.location.href.indexOf("/conversations") > -1 && specificIDs.includes(getCurrentSubaccountID())) {
+                updateConversationsContent();
+            }
+        });
+
+        observer.observe(document.body, { attributes: true, subtree: true, childList: true });
+    }
+
+    observeChanges();
+
+    // Initial call to handle the case when the page is loaded directly on the conversations
+    if (window.location.href.indexOf("/conversations") > -1 && specificIDs.includes(getCurrentSubaccountID())) {
+        updateConversationsContent();
+    }
+    
     
     function replaceText() {
         const sidebar = document.querySelector('#sidebar-v2');
