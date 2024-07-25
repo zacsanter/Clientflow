@@ -58,7 +58,21 @@ if (window.location.href.indexOf("/dashboard") > -1) {
     }
 }
 
-   function updateOpportunitiesContent() {
+    function resetContent() {
+        const titleElement = document.querySelector('.topmenu-navtitle');
+        if (titleElement) {
+            // Reset the title element based on the current section
+            if (window.location.href.indexOf("/opportunities") > -1) {
+                titleElement.textContent = 'Opportunities';
+            } else if (window.location.href.indexOf("/conversations") > -1) {
+                titleElement.textContent = 'Conversations';
+            }
+        }
+    }
+
+    function updateOpportunitiesContent() {
+        resetContent();
+
         // Change 'Opportunities' to 'Cases' in the title
         const titleElement = document.querySelector('.topmenu-navtitle');
         if (titleElement) {
@@ -131,6 +145,8 @@ if (window.location.href.indexOf("/dashboard") > -1) {
     }
 
     function updateConversationsContent() {
+        resetContent();
+
         // Change 'Conversations' to 'Messages' in the title
         const titleElement = document.querySelector('.topmenu-navtitle');
         if (titleElement) {
