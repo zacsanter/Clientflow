@@ -123,10 +123,10 @@ if (window.location.href.indexOf("/dashboard") > -1) {
             pipelineTitleElement.textContent = pipelineTitleElement.textContent.replace(/Pipelines/i, 'Stages');
         }
 
-        // Hide 'Create New Pipeline' button within .hl_controls .hl_controls--right
+        // Change 'Create New Pipeline' to 'Create New Stage' button within .hl_controls .hl_controls--right
         const createPipelineButton = document.querySelector('.hl_controls .hl_controls--right button');
         if (createPipelineButton && createPipelineButton.textContent.includes('Create new pipeline')) {
-            createPipelineButton.style.display = 'none';
+            createPipelineButton.textContent = createPipelineButton.textContent.replace(/Create new pipeline/i, 'Create new stage');
         }
     }
 
