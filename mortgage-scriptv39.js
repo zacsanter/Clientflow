@@ -59,7 +59,7 @@ if (window.location.href.indexOf("/dashboard") > -1) {
 }
 
    
-  function updateTitle() {
+function updateTitle() {
         const titleElement = document.querySelector('.topmenu-navtitle');
         if (titleElement) {
             if (window.location.href.indexOf("/opportunities") > -1) {
@@ -179,6 +179,8 @@ if (window.location.href.indexOf("/dashboard") > -1) {
                 } else if (window.location.href.indexOf("/conversations") > -1) {
                     showTopMenuNav();
                     updateConversationsContent();
+                } else if (window.location.href.indexOf("/marketing/emails/all") > -1) {
+                    hideTopMenuNav();
                 } else {
                     showTopMenuNav();
                     updateTitle();
@@ -200,6 +202,8 @@ if (window.location.href.indexOf("/dashboard") > -1) {
         } else if (window.location.href.indexOf("/conversations") > -1) {
             showTopMenuNav();
             updateConversationsContent();
+        } else if (window.location.href.indexOf("/marketing/emails/all") > -1) {
+            hideTopMenuNav();
         } else {
             showTopMenuNav();
             updateTitle();
