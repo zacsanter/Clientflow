@@ -35,10 +35,6 @@
             navigateToEmailTemplates();
         } else if (event.data === 'navigate_to_text_templates') {
             navigateToTextTemplates();
-        } else if (event.data === 'open_newlead_popup') {
-            openNewLeadPopup();
-        } else if (event.data === 'open_remortgage_popup') {
-            openRemortgagePopup();
         }
     }
 
@@ -46,6 +42,7 @@
         const marketingLink = document.querySelector('a[href*="/marketing"]');
         if (marketingLink) {
             marketingLink.click();
+
             const observer = new MutationObserver((mutations, observer) => {
                 const templatesLink = document.querySelector('a[href*="/marketing/emails/all"]');
                 if (templatesLink) {
@@ -53,6 +50,7 @@
                     observer.disconnect();
                 }
             });
+
             observer.observe(document.body, {
                 childList: true,
                 subtree: true
@@ -64,6 +62,7 @@
         const conversationsLink = document.querySelector('a[href*="/conversations"]');
         if (conversationsLink) {
             conversationsLink.click();
+
             const observer = new MutationObserver((mutations, observer) => {
                 const templatesLink = document.querySelector('a[href*="/conversations/templates"]');
                 if (templatesLink) {
@@ -71,6 +70,7 @@
                     observer.disconnect();
                 }
             });
+
             observer.observe(document.body, {
                 childList: true,
                 subtree: true
@@ -80,80 +80,20 @@
 
     window.addEventListener('message', handleIframeMessage, false);
 
-    function createPopupContainer(popupId, iframeSrc, iframeTitle, height) {
-        const overlay = document.createElement('div');
-        overlay.id = `popup-overlay-${popupId}`;
-        overlay.style.cssText = 'position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); z-index: 9998; display: flex; justify-content: center; align-items: center;';
-        overlay.onclick = () => closePopup(popupId);
-        document.body.appendChild(overlay);
-
-        const popupContainer = document.createElement('div');
-        popupContainer.id = `popup-container-${popupId}`;
-        popupContainer.style.cssText = `position: relative; width: 700px; height: ${height}px; max-height: 90%; background: white; border-radius: 20px; display: flex; flex-direction: column; justify-content: center; align-items: center;`;
-        overlay.appendChild(popupContainer);
-
-        const popupIframe = document.createElement('iframe');
-        popupIframe.src = iframeSrc;
-        popupIframe.style.cssText = 'width: 100%; height: 100%; border: none; border-radius: 20px;';
-        popupIframe.id = `popup-${popupId}`;
-        popupIframe.title = iframeTitle;
-        popupContainer.appendChild(popupIframe);
-
-        const closeBtn = document.createElement('button');
-        closeBtn.id = `popup-close-btn-${popupId}`;
-        closeBtn.innerHTML = '&times;';
-        closeBtn.style.cssText = 'position: absolute; top: 10px; right: 20px; z-index: 10000; background: transparent; border: none; font-size: 24px; font-weight: bold; color: black; cursor: pointer;';
-        closeBtn.onclick = () => closePopup(popupId);
-        popupContainer.appendChild(closeBtn);
-    }
-
-    function openNewLeadPopup() {
-        const popupContainer = document.getElementById('popup-container-newlead');
-        const overlay = document.getElementById('popup-overlay-newlead');
-        if (popupContainer && overlay) {
-            popupContainer.style.display = 'flex';
-            overlay.style.display = 'flex';
-        } else {
-            createPopupContainer('newlead', 'https://api.clientflow.ai/widget/form/Hpix7Xq0muUZmlINd37c', 'Manual Input', 865);
-        }
-    }
-
-    function openRemortgagePopup() {
-        const popupContainer = document.getElementById('popup-container-remortgage');
-        const overlay = document.getElementById('popup-overlay-remortgage');
-        if (popupContainer && overlay) {
-            popupContainer.style.display = 'flex';
-            overlay.style.display = 'flex';
-        } else {
-            createPopupContainer('remortgage', 'https://api.clientflow.ai/widget/form/ZN684guea1XfjJg3OIdT', 'New Remortgage Clients', 410);
-        }
-    }
-
-    function closePopup(popupId) {
-        const popupContainer = document.getElementById(`popup-container-${popupId}`);
-        const overlay = document.getElementById(`popup-overlay-${popupId}`);
-        if (popupContainer) {
-            popupContainer.style.display = 'none';
-        }
-        if (overlay) {
-            overlay.style.display = 'none';
-        }
-    }
-
-    const observerForIframes = new MutationObserver((mutations) => {
+    const observer = new MutationObserver((mutations) => {
         mutations.forEach((mutation) => {
             mutation.addedNodes.forEach((node) => {
                 if (node.tagName === 'IFRAME' && node.src.includes('clientflow.ai')) {
                     node.addEventListener('load', () => {
                         console.log('Iframe loaded and ready to send messages.');
                     });
-                    observerForIframes.disconnect();
+                    observer.disconnect();
                 }
             });
         });
     });
 
-    observerForIframes.observe(document.body, {
+    observer.observe(document.body, {
         childList: true,
         subtree: true
     });
@@ -271,20 +211,6 @@
         });
     }
 
-    function hideTopMenuNav() {
-        const topMenuNav = document.querySelector('.topmenu-nav');
-        if (topMenuNav) {
-            topMenuNav.style.display = 'none';
-        }
-    }
-
-    function showTopMenuNav() {
-        const topMenuNav = document.querySelector('.topmenu-nav');
-        if (topMenuNav) {
-            topMenuNav.style.display = 'flex';
-        }
-    }
-
     function hidePaymentsIDs() {
         const idsToHide = ['tb_payment-orders-new', 'tb_payment-subscriptions', 'tb_payment-links'];
         idsToHide.forEach(id => {
@@ -329,34 +255,28 @@
         const observer = new MutationObserver(() => {
             if (specificIDs.includes(getCurrentSubaccountID())) {
                 if (window.location.href.indexOf("/opportunities") > -1) {
-                    showTopMenuNav();
                     updateOpportunitiesContent();
                 } else if (window.location.href.indexOf("/conversations/templates") > -1) {
-                    hideTopMenuNav();
+                    updateConversationsContent();
                 } else if (window.location.href.indexOf("/conversations") > -1) {
-                    showTopMenuNav();
                     updateConversationsContent();
                 } else if (window.location.href.indexOf("/marketing/emails/all") > -1) {
-                    hideTopMenuNav();
+                    hideMarketingIDs();
+                    updateTitle();
                 } else if (window.location.href.indexOf("/payments") > -1) {
-                    showTopMenuNav();
                     hidePaymentsIDs();
                     updateTitle();
                 } else if (window.location.href.indexOf("/marketing") > -1) {
-                    showTopMenuNav();
                     hideMarketingIDs();
                     updateTitle();
                 } else if (window.location.href.indexOf("/funnels-websites") > -1) {
-                    showTopMenuNav();
                     hideFunnelsWebsitesIDs();
                     updateTitle();
                 } else if (window.location.href.indexOf("/reputation") > -1) {
-                    showTopMenuNav();
                     hideReputationIDs();
                     updateTitle();
                 } else {
-                    showTopMenuNav();
-                    updateTitle(); 
+                    updateTitle();
                 }
             }
         });
@@ -368,33 +288,27 @@
 
     if (specificIDs.includes(getCurrentSubaccountID())) {
         if (window.location.href.indexOf("/opportunities") > -1) {
-            showTopMenuNav();
             updateOpportunitiesContent();
         } else if (window.location.href.indexOf("/conversations/templates") > -1) {
-            hideTopMenuNav();
+            updateConversationsContent();
         } else if (window.location.href.indexOf("/conversations") > -1) {
-            showTopMenuNav();
             updateConversationsContent();
         } else if (window.location.href.indexOf("/marketing/emails/all") > -1) {
-            hideTopMenuNav();
+            hideMarketingIDs();
+            updateTitle();
         } else if (window.location.href.indexOf("/payments") > -1) {
-            showTopMenuNav();
             hidePaymentsIDs();
             updateTitle();
         } else if (window.location.href.indexOf("/marketing") > -1) {
-            showTopMenuNav();
             hideMarketingIDs();
             updateTitle();
         } else if (window.location.href.indexOf("/funnels-websites") > -1) {
-            showTopMenuNav();
             hideFunnelsWebsitesIDs();
             updateTitle();
         } else if (window.location.href.indexOf("/reputation") > -1) {
-            showTopMenuNav();
             hideReputationIDs();
             updateTitle();
         } else {
-            showTopMenuNav();
             updateTitle();
         }
     }
@@ -475,30 +389,10 @@
         });
     }
 
-    function createDivider(id) {
-        const divider = document.createElement('div');
-        divider.id = id;
-        divider.className = 'w-full group px-3 flex items-center justify-start lg:justify-start xl:justify-start text-sm font-medium rounded-md cursor-pointer exact-active-class active text-gray-300 font-normal cursor-text divider';
-        divider.innerHTML = '<p class="w-full text-left border-b border-solid my-3" style="line-height: 0.1em; font-size: 10px;"></p>';
-        return divider;
-    }
-
     function reorderMenu() {
         const nav = document.querySelector('nav.flex-1');
-        
-        let divider1 = document.getElementById('sb_divider-1');
-        if (!divider1) {
-            divider1 = createDivider('sb_divider-1');
-        }
-        
-        let divider2 = document.getElementById('sb_divider-2');
-        if (!divider2) {
-            divider2 = createDivider('sb_divider-2');
-        }
-
         const aboveDividerIds = ['sb_payments', 'sb_contacts', 'sb_calendars', 'sb_conversations', 'sb_opportunities', 'sb_dashboard'];
-        const belowDividerIds1 = ['c6a282f5-82f5-42cb-af05-44f1977526fd', 'fe805c15-fdd8-4c7b-ac52-f7e918df91af', '0c00b7dd-1472-4583-96d3-300efa90270e', '78bd1c09-76e7-46a3-8b6c-084a4bcb4e85'];
-        const belowDividerIds2 = ['sb_email-marketing', 'sb_sites', 'sb_reputation', 'sb_location-mobile-app', '4ef91dc6-9fa4-415e-96a9-9a15a298d5d9'];
+        const belowDividerIds = ['sb_email-marketing', 'sb_sites', 'sb_reputation', 'sb_location-mobile-app', '4ef91dc6-9fa4-415e-96a9-9a15a298d5d9'];
 
         aboveDividerIds.forEach(id => {
             const element = document.getElementById(id);
@@ -507,18 +401,7 @@
             }
         });
 
-        nav.appendChild(divider1);
-
-        belowDividerIds1.forEach(id => {
-            const element = document.getElementById(id);
-            if (element) {
-                nav.appendChild(element);
-            }
-        });
-
-        nav.appendChild(divider2);
-
-        belowDividerIds2.forEach(id => {
+        belowDividerIds.forEach(id => {
             const element = document.getElementById(id);
             if (element) {
                 nav.appendChild(element);
@@ -559,6 +442,7 @@
     }
 
     const observer = new MutationObserver(handleMutation);
+
     observer.observe(document.body, { childList: true, subtree: true });
 
     applyChanges();
