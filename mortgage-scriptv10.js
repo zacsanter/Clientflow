@@ -111,6 +111,12 @@ if (window.location.href.indexOf("/dashboard") > -1) {
         if (pb3Element) {
             pb3Element.textContent = pb3Element.textContent.replace(/You can now have different owner for contact and opportunity./i, 'You can now have different owner for contact and case.');
         }
+
+        // Change 'Opportunity Details' to 'Case Details' in the specific button
+        const opportunityDetailsButton = document.querySelector('.bg-blue-50.font-bold.text-blue-800.w-48.rounded.p-2.text-left.text-xs');
+        if (opportunityDetailsButton) {
+            opportunityDetailsButton.textContent = opportunityDetailsButton.textContent.replace(/Opportunity Details/i, 'Case Details');
+        }
     }
 
     new MutationObserver(() => {
