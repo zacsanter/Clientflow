@@ -58,26 +58,21 @@ if (window.location.href.indexOf("/dashboard") > -1) {
     }
 }
 
-    function resetContent() {
+    function updateTitle() {
         const titleElement = document.querySelector('.topmenu-navtitle');
         if (titleElement) {
-            // Reset the title element based on the current section
             if (window.location.href.indexOf("/opportunities") > -1) {
-                titleElement.textContent = 'Opportunities';
+                titleElement.textContent = 'Cases';
             } else if (window.location.href.indexOf("/conversations") > -1) {
-                titleElement.textContent = 'Conversations';
+                titleElement.textContent = 'Messages';
+            } else {
+                titleElement.textContent = 'Dashboard';
             }
         }
     }
 
     function updateOpportunitiesContent() {
-        resetContent();
-
-        // Change 'Opportunities' to 'Cases' in the title
-        const titleElement = document.querySelector('.topmenu-navtitle');
-        if (titleElement) {
-            titleElement.textContent = titleElement.textContent.replace(/Opportunities/i, 'Cases');
-        }
+        updateTitle();
 
         // Change 'Opportunities' to 'Cases' in span class 'flex items-center'
         const itemsCenterElements = document.querySelectorAll('.flex.items-center span');
@@ -145,13 +140,7 @@ if (window.location.href.indexOf("/dashboard") > -1) {
     }
 
     function updateConversationsContent() {
-        resetContent();
-
-        // Change 'Conversations' to 'Messages' in the title
-        const titleElement = document.querySelector('.topmenu-navtitle');
-        if (titleElement) {
-            titleElement.textContent = titleElement.textContent.replace(/Conversations/i, 'Messages');
-        }
+        updateTitle();
     }
 
     function observeChanges() {
