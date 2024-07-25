@@ -123,8 +123,8 @@ if (window.location.href.indexOf("/dashboard") > -1) {
             pipelineTitleElement.textContent = pipelineTitleElement.textContent.replace(/Pipelines/i, 'Stages');
         }
 
-        // Hide 'Create New Pipeline' button
-        const createPipelineButton = document.querySelector('.hl-btn.inline-flex.items-center');
+        // Hide 'Create New Pipeline' button within .hl_controls .hl_controls--right
+        const createPipelineButton = document.querySelector('.hl_controls .hl_controls--right button');
         if (createPipelineButton && createPipelineButton.textContent.includes('Create new pipeline')) {
             createPipelineButton.style.display = 'none';
         }
