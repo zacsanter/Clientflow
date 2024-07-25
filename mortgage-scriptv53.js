@@ -13,7 +13,8 @@
         'sb_reputation': 'https://uploads-ssl.webflow.com/64b5377d6986a8653501c06c/669eabcca907b2cdb7d70ca8_CF%20Icon%20-%20Reputation v3.svg',
         'sb_location-mobile-app': 'https://uploads-ssl.webflow.com/64b5377d6986a8653501c06c/669ea7266da273956fa99558_CF%20Icon%20-%20Mobile App v3.svg'
     };
-    const hideIDs = {
+    const hideIDs = ['sb_reporting', 'sb_app-media', 'sb_automation', 'sb_memberships'];
+    const hideSectionIDs = {
         'payments': ['tb_payment-orders-new', 'tb_payment-subscriptions', 'tb_payment-links'],
         'marketing': ['tb_affiliate-manager'],
         'funnels-websites': ['tb_stores', 'tb_websites', 'tb_analytics', 'tb_blogs', 'tb_wordpress-v2', 'tb_clientportal', 'tb_url-redirects', 'tb_sites-domain-settings'],
@@ -58,7 +59,6 @@
                     observer.disconnect();
                 }
             });
-
             observer.observe(document.body, {
                 childList: true,
                 subtree: true
@@ -77,33 +77,12 @@
                     observer.disconnect();
                 }
             });
-
             observer.observe(document.body, {
                 childList: true,
                 subtree: true
             });
         }
     }
-
-    window.addEventListener('message', handleIframeMessage, false);
-
-    const observer = new MutationObserver((mutations) => {
-        mutations.forEach((mutation) => {
-            mutation.addedNodes.forEach((node) => {
-                if (node.tagName === 'IFRAME' && node.src.includes('clientflow.ai')) {
-                    node.addEventListener('load', () => {
-                        console.log('Iframe loaded and ready to send messages.');
-                    });
-                    observer.disconnect();
-                }
-            });
-        });
-    });
-
-    observer.observe(document.body, {
-        childList: true,
-        subtree: true
-    });
 
     function createPopupContainer(popupId, iframeSrc, iframeTitle, height) {
         const overlay = document.createElement('div');
@@ -170,23 +149,25 @@
 
     window.addEventListener('message', handleIframeMessage, false);
 
-    const observer2 = new MutationObserver((mutations) => {
-        mutations.forEach((mutation) => {
-            mutation.addedNodes.forEach((node) => {
-                if (node.tagName === 'IFRAME' && node.src.includes('clientflow.ai')) {
-                    node.addEventListener('load', () => {
-                        console.log('Iframe loaded and ready to send messages.');
-                    });
-                    observer2.disconnect();
-                }
-            });
-        });
-    });
+    new MutationObserver(() => {
+        if (window.location.href.indexOf("/dashboard") > -1) {
+            const titleElement = document.querySelector('#location-dashboard .hl-header-content .title');
+            if (titleElement) {
+                updateDashboardTitle();
+            } else {
+                setTimeout(updateDashboardTitle, 50);
+            }
+        }
+    }).observe(document.body, { attributes: true, subtree: true, childList: true });
 
-    observer2.observe(document.body, {
-        childList: true,
-        subtree: true
-    });
+    if (window.location.href.indexOf("/dashboard") > -1) {
+        const titleElement = document.querySelector('#location-dashboard .hl-header-content .title');
+        if (titleElement) {
+            updateDashboardTitle();
+        } else {
+            setTimeout(updateDashboardTitle, 50);
+        }
+    }
 
     function updateTitle() {
         const titleElement = document.querySelector('.topmenu-navtitle');
@@ -283,28 +264,68 @@
         });
     }
 
-    function hideElements() {
-        const currentSection = window.location.href;
-        let section = '';
+    function hidePaymentsIDs() {
+        const idsToHide = hideSectionIDs['payments'];
+        idsToHide.forEach(id => {
+            const element = document.getElementById(id);
+            if (element) {
+                element.style.display = 'none';
+            }
+        });
+    }
 
-        if (currentSection.indexOf('/payments') > -1) {
-            section = 'payments';
-        } else if (currentSection.indexOf('/marketing') > -1) {
-            section = 'marketing';
-        } else if (currentSection.indexOf('/funnels-websites') > -1) {
-            section = 'funnels-websites';
-        } else if (currentSection.indexOf('/reputation') > -1) {
-            section = 'reputation';
-        }
+    function hideMarketingIDs() {
+        const idsToHide = hideSectionIDs['marketing'];
+        idsToHide.forEach(id => {
+            const element = document.getElementById(id);
+            if (element) {
+                element.style.display = 'none';
+            }
+        });
+    }
 
-        if (section && hideIDs[section]) {
-            hideIDs[section].forEach(id => {
-                const element = document.getElementById(id);
-                if (element) {
-                    element.style.display = 'none';
+    function hideFunnelsWebsitesIDs() {
+        const idsToHide = hideSectionIDs['funnels-websites'];
+        idsToHide.forEach(id => {
+            const element = document.getElementById(id);
+            if (element) {
+                element.style.display = 'none';
+            }
+        });
+    }
+
+    function hideReputationIDs() {
+        const idsToHide = hideSectionIDs['reputation'];
+        idsToHide.forEach(id => {
+            const element = document.getElementById(id);
+            if (element) {
+                element.style.display = 'none';
+            }
+        });
+    }
+
+    function observeChanges() {
+        const observer4 = new MutationObserver(() => {
+            if (specificIDs.includes(getCurrentSubaccountID())) {
+                if (window.location.href.indexOf("/opportunities") > -1) {
+                    updateOpportunitiesContent();
+                } else if (window.location.href.indexOf("/conversations") > -1) {
+                    updateConversationsContent();
+                } else if (window.location.href.indexOf("/payments") > -1) {
+                    hidePaymentsIDs();
+                } else if (window.location.href.indexOf("/marketing") > -1) {
+                    hideMarketingIDs();
+                } else if (window.location.href.indexOf("/funnels-websites") > -1) {
+                    hideFunnelsWebsitesIDs();
+                } else if (window.location.href.indexOf("/reputation") > -1) {
+                    hideReputationIDs();
                 }
-            });
-        }
+                updateTitle();
+                hideElements();
+            }
+        });
+
+        observer4.observe(document.body, { attributes: true, subtree: true, childList: true });
     }
 
     function replaceText() {
@@ -374,10 +395,19 @@
         });
     }
 
+    function hideElements() {
+        hideIDs.forEach(id => {
+            const element = document.querySelector(`#${id}`);
+            if (element) {
+                element.style.display = 'none';
+            }
+        });
+    }
+
     function reorderMenu() {
         const nav = document.querySelector('nav.flex-1');
         const aboveDividerIds = ['sb_payments', 'sb_contacts', 'sb_calendars', 'sb_conversations', 'sb_opportunities', 'sb_dashboard'];
-        const belowDividerIds2 = ['sb_email-marketing', 'sb_sites', 'sb_reputation', 'sb_location-mobile-app', '4ef91dc6-9fa4-415e-96a9-9a15a298d5d9'];
+        const belowDividerIds = ['sb_email-marketing', 'sb_sites', 'sb_reputation', 'sb_location-mobile-app', '4ef91dc6-9fa4-415e-96a9-9a15a298d5d9'];
 
         aboveDividerIds.forEach(id => {
             const element = document.getElementById(id);
@@ -386,7 +416,7 @@
             }
         });
 
-        belowDividerIds2.forEach(id => {
+        belowDividerIds.forEach(id => {
             const element = document.getElementById(id);
             if (element) {
                 nav.appendChild(element);
@@ -426,85 +456,9 @@
         });
     }
 
-    const observer3 = new MutationObserver(handleMutation);
-
-    observer3.observe(document.body, { childList: true, subtree: true });
+    const observer5 = new MutationObserver(handleMutation);
+    observer5.observe(document.body, { childList: true, subtree: true });
 
     applyChanges();
-
-    new MutationObserver(() => {
-        if (window.location.href.indexOf("/dashboard") > -1) {
-            const titleElement = document.querySelector('#location-dashboard .hl-header-content .title');
-            if (titleElement) {
-                updateDashboardTitle();
-            } else {
-                setTimeout(updateDashboardTitle, 50);
-            }
-        }
-    }).observe(document.body, { attributes: true, subtree: true, childList: true });
-
-    if (window.location.href.indexOf("/dashboard") > -1) {
-        const titleElement = document.querySelector('#location-dashboard .hl-header-content .title');
-        if (titleElement) {
-            updateDashboardTitle();
-        } else {
-            setTimeout(updateDashboardTitle, 50);
-        }
-    }
-
-    function observeChanges() {
-        const observer = new MutationObserver(() => {
-            if (specificIDs.includes(getCurrentSubaccountID())) {
-                if (window.location.href.indexOf("/opportunities") > -1) {
-                    updateOpportunitiesContent();
-                } else if (window.location.href.indexOf("/conversations/templates") > -1) {
-                    // No specific updates for this section
-                } else if (window.location.href.indexOf("/conversations") > -1) {
-                    updateConversationsContent();
-                } else if (window.location.href.indexOf("/payments") > -1) {
-                    hideElements();
-                    updateTitle();
-                } else if (window.location.href.indexOf("/marketing") > -1) {
-                    hideElements();
-                    updateTitle();
-                } else if (window.location.href.indexOf("/funnels-websites") > -1) {
-                    hideElements();
-                    updateTitle();
-                } else if (window.location.href.indexOf("/reputation") > -1) {
-                    hideElements();
-                    updateTitle();
-                } else {
-                    updateTitle();
-                }
-            }
-        });
-
-        observer.observe(document.body, { attributes: true, subtree: true, childList: true });
-    }
-
     observeChanges();
-
-    if (specificIDs.includes(getCurrentSubaccountID())) {
-        if (window.location.href.indexOf("/opportunities") > -1) {
-            updateOpportunitiesContent();
-        } else if (window.location.href.indexOf("/conversations/templates") > -1) {
-            // No specific updates for this section
-        } else if (window.location.href.indexOf("/conversations") > -1) {
-            updateConversationsContent();
-        } else if (window.location.href.indexOf("/payments") > -1) {
-            hideElements();
-            updateTitle();
-        } else if (window.location.href.indexOf("/marketing") > -1) {
-            hideElements();
-            updateTitle();
-        } else if (window.location.href.indexOf("/funnels-websites") > -1) {
-            hideElements();
-            updateTitle();
-        } else if (window.location.href.indexOf("/reputation") > -1) {
-            hideElements();
-            updateTitle();
-        } else {
-            updateTitle();
-        }
-    }
 })();
