@@ -143,15 +143,62 @@ function updateTitle() {
         }
     }
 
-    function updateConversationsContent() {
+     function updateConversationsContent() {
         updateTitle();
 
+        // Change 'Conversations' to 'Messages' in span class 'flex items-center'
         const itemsCenterElements = document.querySelectorAll('.flex.items-center span');
         itemsCenterElements.forEach(element => {
             if (/Conversations/i.test(element.textContent)) {
                 element.textContent = element.textContent.replace(/Conversations/i, 'Messages');
             }
         });
+    }
+
+    function updatePaymentsContent() {
+        updateTitle();
+
+        // Hide specific IDs in the payments section
+        const idsToHide = ['tb_payment-orders-new', 'tb_payment-subscriptions', 'tb_payment-links'];
+        idsToHide.forEach(id => {
+            const element = document.getElementById(id);
+            if (element) {
+                element.style.display = 'none';
+            }
+        });
+    }
+
+    function updateMarketingContent() {
+        updateTitle();
+
+        // Hide specific ID in the marketing section
+        const element = document.getElementById('tb_affiliate-manager');
+        if (element) {
+            element.style.display = 'none';
+        }
+    }
+
+    function updateFunnelsWebsitesContent() {
+        updateTitle();
+
+        // Hide specific IDs in the funnels-websites section
+        const idsToHide = ['tb_funnels', 'tb_websites', 'tb_analytics', 'tb_blogs', 'tb_wordpress-v2', 'tb_clientportal', 'tb_url-redirects'];
+        idsToHide.forEach(id => {
+            const element = document.getElementById(id);
+            if (element) {
+                element.style.display = 'none';
+            }
+        });
+    }
+
+    function updateReputationContent() {
+        updateTitle();
+
+        // Hide specific ID in the reputation section
+        const element = document.getElementById('tb_online-listings');
+        if (element) {
+            element.style.display = 'none';
+        }
     }
 
     function hideTopMenuNav() {
