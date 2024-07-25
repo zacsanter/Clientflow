@@ -154,6 +154,27 @@ if (window.location.href.indexOf("/dashboard") > -1) {
 
     function updateConversationsContent() {
         updateTitle();
+
+        // Change 'Conversations' to 'Messages' in span class 'flex items-center'
+        const itemsCenterElements = document.querySelectorAll('.flex.items-center span');
+        itemsCenterElements.forEach(element => {
+            if (/Conversations/i.test(element.textContent)) {
+                element.textContent = element.textContent.replace(/Conversations/i, 'Messages');
+            }
+        });
+    }
+
+    function updatePaymentsContent() {
+        updateTitle();
+
+        // Hide specific IDs in the payments section
+        const idsToHide = ['tb_payment-orders-new', 'tb_payment-subscriptions', 'tb_payment-links'];
+        idsToHide.forEach(id => {
+            const element = document.getElementById(id);
+            if (element) {
+                element.style.display = 'none';
+            }
+        });
     }
 
     function observeChanges() {
@@ -163,6 +184,8 @@ if (window.location.href.indexOf("/dashboard") > -1) {
                     updateOpportunitiesContent();
                 } else if (window.location.href.indexOf("/conversations") > -1) {
                     updateConversationsContent();
+                } else if (window.location.href.indexOf("/payments") > -1) {
+                    updatePaymentsContent();
                 } else {
                     updateTitle(); // Update title for other sections
                 }
@@ -180,6 +203,8 @@ if (window.location.href.indexOf("/dashboard") > -1) {
             updateOpportunitiesContent();
         } else if (window.location.href.indexOf("/conversations") > -1) {
             updateConversationsContent();
+        } else if (window.location.href.indexOf("/payments") > -1) {
+            updatePaymentsContent();
         } else {
             updateTitle(); // Update title for other sections
         }
