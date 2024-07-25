@@ -160,36 +160,9 @@ if (window.location.href.indexOf("/dashboard") > -1) {
         });
     }
 
-    function resetTitleContent() {
-        const titleElement = document.querySelector('.topmenu-navtitle');
-        if (titleElement) {
-            if (window.location.href.indexOf("/dashboard") > -1) {
-                titleElement.textContent = 'Dashboard';
-            } else if (window.location.href.indexOf("/opportunities") > -1) {
-                titleElement.textContent = 'Opportunities';
-            } else if (window.location.href.indexOf("/conversations") > -1) {
-                titleElement.textContent = 'Conversations';
-            } else if (window.location.href.indexOf("/calendars") > -1) {
-                titleElement.textContent = 'Calendars';
-            } else if (window.location.href.indexOf("/contacts") > -1) {
-                titleElement.textContent = 'Contacts';
-            } else if (window.location.href.indexOf("/payments") > -1) {
-                titleElement.textContent = 'Invoice & Sign';
-            } else if (window.location.href.indexOf("/marketing") > -1) {
-                titleElement.textContent = 'Marketing';
-            } else if (window.location.href.indexOf("/funnels-websites") > -1) {
-                titleElement.textContent = 'Forms';
-            } else if (window.location.href.indexOf("/reputation") > -1) {
-                titleElement.textContent = 'Reviews';
-            }
-        }
-    }
-
     function observeChanges() {
         const observer = new MutationObserver(() => {
             if (specificIDs.includes(getCurrentSubaccountID())) {
-                resetTitleContent();
-
                 if (window.location.href.indexOf("/opportunities") > -1) {
                     updateOpportunitiesContent();
                 } else if (window.location.href.indexOf("/conversations") > -1) {
@@ -207,8 +180,6 @@ if (window.location.href.indexOf("/dashboard") > -1) {
 
     // Initial call to handle the case when the page is loaded directly on a specific section
     if (specificIDs.includes(getCurrentSubaccountID())) {
-        resetTitleContent();
-
         if (window.location.href.indexOf("/opportunities") > -1) {
             updateOpportunitiesContent();
         } else if (window.location.href.indexOf("/conversations") > -1) {
