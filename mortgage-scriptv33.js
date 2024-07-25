@@ -75,7 +75,7 @@ if (window.location.href.indexOf("/dashboard") > -1) {
             } else if (window.location.href.indexOf("/marketing") > -1) {
                 titleElement.textContent = 'Marketing';
             } else if (window.location.href.indexOf("/funnels-websites") > -1) {
-                titleElement.textContent = 'Funnels & Forms';
+                titleElement.textContent = 'Forms';
             } else if (window.location.href.indexOf("/reputation") > -1) {
                 titleElement.textContent = 'Reviews';
             } else {
@@ -191,7 +191,7 @@ if (window.location.href.indexOf("/dashboard") > -1) {
         updateTitle();
 
         // Hide specific IDs in the funnels-websites section
-        const idsToHide = ['tb_websites', 'tb_analytics', 'tb_blogs', 'tb_stores', 'tb_wordpress-v2', 'tb_clientportal', 'tb_url-redirects', 'tb_sites-domain-settings'];
+        const idsToHide = ['tb_funnels', 'tb_websites', 'tb_analytics', 'tb_blogs', 'tb_wordpress-v2', 'tb_clientportal', 'tb_url-redirects'];
         idsToHide.forEach(id => {
             const element = document.getElementById(id);
             if (element) {
@@ -210,11 +210,21 @@ if (window.location.href.indexOf("/dashboard") > -1) {
         }
     }
 
+    function updateConversationsTemplatesContent() {
+        // Remove the div with class 'topmenu-nav' in the conversations/templates section
+        const topMenuNav = document.querySelector('.topmenu-nav');
+        if (topMenuNav) {
+            topMenuNav.remove();
+        }
+    }
+
     function observeChanges() {
         const observer = new MutationObserver(() => {
             if (specificIDs.includes(getCurrentSubaccountID())) {
                 if (window.location.href.indexOf("/opportunities") > -1) {
                     updateOpportunitiesContent();
+                } else if (window.location.href.indexOf("/conversations/templates") > -1) {
+                    updateConversationsTemplatesContent();
                 } else if (window.location.href.indexOf("/conversations") > -1) {
                     updateConversationsContent();
                 } else if (window.location.href.indexOf("/payments") > -1) {
@@ -240,6 +250,8 @@ if (window.location.href.indexOf("/dashboard") > -1) {
     if (specificIDs.includes(getCurrentSubaccountID())) {
         if (window.location.href.indexOf("/opportunities") > -1) {
             updateOpportunitiesContent();
+        } else if (window.location.href.indexOf("/conversations/templates") > -1) {
+            updateConversationsTemplatesContent();
         } else if (window.location.href.indexOf("/conversations") > -1) {
             updateConversationsContent();
         } else if (window.location.href.indexOf("/payments") > -1) {
