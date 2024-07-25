@@ -143,62 +143,15 @@ function updateTitle() {
         }
     }
 
-     function updateConversationsContent() {
+    function updateConversationsContent() {
         updateTitle();
 
-        // Change 'Conversations' to 'Messages' in span class 'flex items-center'
         const itemsCenterElements = document.querySelectorAll('.flex.items-center span');
         itemsCenterElements.forEach(element => {
             if (/Conversations/i.test(element.textContent)) {
                 element.textContent = element.textContent.replace(/Conversations/i, 'Messages');
             }
         });
-    }
-
-    function updatePaymentsContent() {
-        updateTitle();
-
-        // Hide specific IDs in the payments section
-        const idsToHide = ['tb_payment-orders-new', 'tb_payment-subscriptions', 'tb_payment-links'];
-        idsToHide.forEach(id => {
-            const element = document.getElementById(id);
-            if (element) {
-                element.style.display = 'none';
-            }
-        });
-    }
-
-    function updateMarketingContent() {
-        updateTitle();
-
-        // Hide specific ID in the marketing section
-        const element = document.getElementById('tb_affiliate-manager');
-        if (element) {
-            element.style.display = 'none';
-        }
-    }
-
-    function updateFunnelsWebsitesContent() {
-        updateTitle();
-
-        // Hide specific IDs in the funnels-websites section
-        const idsToHide = ['tb_funnels', 'tb_websites', 'tb_analytics', 'tb_blogs', 'tb_wordpress-v2', 'tb_clientportal', 'tb_url-redirects'];
-        idsToHide.forEach(id => {
-            const element = document.getElementById(id);
-            if (element) {
-                element.style.display = 'none';
-            }
-        });
-    }
-
-    function updateReputationContent() {
-        updateTitle();
-
-        // Hide specific ID in the reputation section
-        const element = document.getElementById('tb_online-listings');
-        if (element) {
-            element.style.display = 'none';
-        }
     }
 
     function hideTopMenuNav() {
@@ -215,6 +168,46 @@ function updateTitle() {
         }
     }
 
+    function hidePaymentsIDs() {
+        const idsToHide = ['tb_payment-orders-new', 'tb_payment-subscriptions', 'tb_payment-links'];
+        idsToHide.forEach(id => {
+            const element = document.getElementById(id);
+            if (element) {
+                element.style.display = 'none';
+            }
+        });
+    }
+
+    function hideMarketingIDs() {
+        const idsToHide = ['tb_affiliate-manager'];
+        idsToHide.forEach(id => {
+            const element = document.getElementById(id);
+            if (element) {
+                element.style.display = 'none';
+            }
+        });
+    }
+
+    function hideFunnelsWebsitesIDs() {
+        const idsToHide = ['tb_funnels', 'tb_websites', 'tb_analytics', 'tb_blogs', 'tb_wordpress-v2', 'tb_clientportal', 'tb_url-redirects'];
+        idsToHide.forEach(id => {
+            const element = document.getElementById(id);
+            if (element) {
+                element.style.display = 'none';
+            }
+        });
+    }
+
+    function hideReputationIDs() {
+        const idsToHide = ['tb_online-listings'];
+        idsToHide.forEach(id => {
+            const element = document.getElementById(id);
+            if (element) {
+                element.style.display = 'none';
+            }
+        });
+    }
+
     function observeChanges() {
         const observer = new MutationObserver(() => {
             if (specificIDs.includes(getCurrentSubaccountID())) {
@@ -228,9 +221,21 @@ function updateTitle() {
                     updateConversationsContent();
                 } else if (window.location.href.indexOf("/marketing/emails/all") > -1) {
                     hideTopMenuNav();
+                } else if (window.location.href.indexOf("/payments") > -1) {
+                    showTopMenuNav();
+                    hidePaymentsIDs();
+                } else if (window.location.href.indexOf("/marketing") > -1) {
+                    showTopMenuNav();
+                    hideMarketingIDs();
+                } else if (window.location.href.indexOf("/funnels-websites") > -1) {
+                    showTopMenuNav();
+                    hideFunnelsWebsitesIDs();
+                } else if (window.location.href.indexOf("/reputation") > -1) {
+                    showTopMenuNav();
+                    hideReputationIDs();
                 } else {
                     showTopMenuNav();
-                    updateTitle();
+                    updateTitle(); // Update title for other sections
                 }
             }
         });
@@ -251,9 +256,21 @@ function updateTitle() {
             updateConversationsContent();
         } else if (window.location.href.indexOf("/marketing/emails/all") > -1) {
             hideTopMenuNav();
+        } else if (window.location.href.indexOf("/payments") > -1) {
+            showTopMenuNav();
+            hidePaymentsIDs();
+        } else if (window.location.href.indexOf("/marketing") > -1) {
+            showTopMenuNav();
+            hideMarketingIDs();
+        } else if (window.location.href.indexOf("/funnels-websites") > -1) {
+            showTopMenuNav();
+            hideFunnelsWebsitesIDs();
+        } else if (window.location.href.indexOf("/reputation") > -1) {
+            showTopMenuNav();
+            hideReputationIDs();
         } else {
             showTopMenuNav();
-            updateTitle();
+            updateTitle(); // Update title for other sections
         }
     }
     
