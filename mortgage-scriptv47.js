@@ -1,5 +1,3 @@
-
-
 (function() {
     const specificIDs = ['ebN44ZZDqKXacptD3Rm7'];
     const iconUrls = {
@@ -24,213 +22,163 @@
         return match ? match[1] : null;
     }
 
-
     function updateDashboardTitle() {
-    const titleElement = document.querySelector('#location-dashboard .hl-header-content .title');
-    if (titleElement) {
-        titleElement.textContent = 'Home';
-        titleElement.style.opacity = 1;
+        const titleElement = document.querySelector('#location-dashboard .hl-header-content .title');
+        if (titleElement) {
+            titleElement.textContent = 'Home';
+            titleElement.style.opacity = 1;
+        }
     }
-}
 
     function handleIframeMessage(event) {
-    if (event.data === 'navigate_to_email_templates') {
-        navigateToEmailTemplates();
-    } else if (event.data === 'navigate_to_text_templates') {
-        navigateToTextTemplates();
+        if (event.data === 'navigate_to_email_templates') {
+            navigateToEmailTemplates();
+        } else if (event.data === 'navigate_to_text_templates') {
+            navigateToTextTemplates();
+        } else if (event.data === 'open_newlead_popup') {
+            openNewLeadPopup();
+        } else if (event.data === 'open_remortgage_popup') {
+            openRemortgagePopup();
+        }
     }
-}
 
-function navigateToEmailTemplates() {
-    // Find and click the sidebar link for Marketing
-    const marketingLink = document.querySelector('a[href*="/marketing"]');
-    if (marketingLink) {
-        marketingLink.click();
-        
-        // Wait for the top bar to update and then click the Templates link under Emails
-        const observer = new MutationObserver((mutations, observer) => {
-            const templatesLink = document.querySelector('a[href*="/marketing/emails/all"]');
-            if (templatesLink) {
-                templatesLink.click();
-                observer.disconnect(); // Stop observing once the link is found and clicked
-            }
-        });
-
-        observer.observe(document.body, {
-            childList: true,
-            subtree: true
-        });
+    function navigateToEmailTemplates() {
+        const marketingLink = document.querySelector('a[href*="/marketing"]');
+        if (marketingLink) {
+            marketingLink.click();
+            const observer = new MutationObserver((mutations, observer) => {
+                const templatesLink = document.querySelector('a[href*="/marketing/emails/all"]');
+                if (templatesLink) {
+                    templatesLink.click();
+                    observer.disconnect();
+                }
+            });
+            observer.observe(document.body, {
+                childList: true,
+                subtree: true
+            });
+        }
     }
-}
 
-function navigateToTextTemplates() {
-    // Find and click the sidebar link for Conversations/Messages
-    const conversationsLink = document.querySelector('a[href*="/conversations"]');
-    if (conversationsLink) {
-        conversationsLink.click();
-        
-        // Wait for the top bar to update and then click the Templates (Snippets) link
-        const observer = new MutationObserver((mutations, observer) => {
-            const templatesLink = document.querySelector('a[href*="/conversations/templates"]');
-            if (templatesLink) {
-                templatesLink.click();
-                observer.disconnect(); // Stop observing once the link is found and clicked
-            }
-        });
-
-        observer.observe(document.body, {
-            childList: true,
-            subtree: true
-        });
+    function navigateToTextTemplates() {
+        const conversationsLink = document.querySelector('a[href*="/conversations"]');
+        if (conversationsLink) {
+            conversationsLink.click();
+            const observer = new MutationObserver((mutations, observer) => {
+                const templatesLink = document.querySelector('a[href*="/conversations/templates"]');
+                if (templatesLink) {
+                    templatesLink.click();
+                    observer.disconnect();
+                }
+            });
+            observer.observe(document.body, {
+                childList: true,
+                subtree: true
+            });
+        }
     }
-}
 
-window.addEventListener('message', handleIframeMessage, false);
+    window.addEventListener('message', handleIframeMessage, false);
 
-// MutationObserver to observe the body for added iframes
-const observer = new MutationObserver((mutations) => {
-    mutations.forEach((mutation) => {
-        mutation.addedNodes.forEach((node) => {
-            if (node.tagName === 'IFRAME' && node.src.includes('clientflow.ai')) {
-                node.addEventListener('load', () => {
-                    console.log('Iframe loaded and ready to send messages.');
-                });
-                observer.disconnect(); // Stop observing once the iframe is found and loaded
-            }
-        });
-    });
-});
+    function createPopupContainer(popupId, iframeSrc, iframeTitle, height) {
+        const overlay = document.createElement('div');
+        overlay.id = `popup-overlay-${popupId}`;
+        overlay.style.cssText = 'position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); z-index: 9998; display: flex; justify-content: center; align-items: center;';
+        overlay.onclick = () => closePopup(popupId);
+        document.body.appendChild(overlay);
 
-observer.observe(document.body, {
-    childList: true,
-    subtree: true
-});
+        const popupContainer = document.createElement('div');
+        popupContainer.id = `popup-container-${popupId}`;
+        popupContainer.style.cssText = `position: relative; width: 700px; height: ${height}px; max-height: 90%; background: white; border-radius: 20px; display: flex; flex-direction: column; justify-content: center; align-items: center;`;
+        overlay.appendChild(popupContainer);
 
-    function handleIframeMessage(event) {
-    if (event.data === 'open_newlead_popup') {
-        openNewLeadPopup();
-    } else if (event.data === 'open_remortgage_popup') {
-        openRemortgagePopup();
+        const popupIframe = document.createElement('iframe');
+        popupIframe.src = iframeSrc;
+        popupIframe.style.cssText = 'width: 100%; height: 100%; border: none; border-radius: 20px;';
+        popupIframe.id = `popup-${popupId}`;
+        popupIframe.title = iframeTitle;
+        popupContainer.appendChild(popupIframe);
+
+        const closeBtn = document.createElement('button');
+        closeBtn.id = `popup-close-btn-${popupId}`;
+        closeBtn.innerHTML = '&times;';
+        closeBtn.style.cssText = 'position: absolute; top: 10px; right: 20px; z-index: 10000; background: transparent; border: none; font-size: 24px; font-weight: bold; color: black; cursor: pointer;';
+        closeBtn.onclick = () => closePopup(popupId);
+        popupContainer.appendChild(closeBtn);
     }
-}
 
-function createPopupContainer(popupId, iframeSrc, iframeTitle, height) {
-    // Create the overlay element
-    const overlay = document.createElement('div');
-    overlay.id = `popup-overlay-${popupId}`;
-    overlay.style.cssText = 'position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); z-index: 9998; display: flex; justify-content: center; align-items: center;';
-    overlay.onclick = () => closePopup(popupId);
-    document.body.appendChild(overlay);
-
-    // Create the container for iframe and close button
-    const popupContainer = document.createElement('div');
-    popupContainer.id = `popup-container-${popupId}`;
-    popupContainer.style.cssText = `position: relative; width: 700px; height: ${height}px; max-height: 90%; background: white; border-radius: 20px; display: flex; flex-direction: column; justify-content: center; align-items: center;`;
-    overlay.appendChild(popupContainer);
-
-    // Create the iframe popup element
-    const popupIframe = document.createElement('iframe');
-    popupIframe.src = iframeSrc;
-    popupIframe.style.cssText = 'width: 100%; height: 100%; border: none; border-radius: 20px;';
-    popupIframe.id = `popup-${popupId}`;
-    popupIframe.title = iframeTitle;
-    popupContainer.appendChild(popupIframe);
-
-    // Create the close button
-    const closeBtn = document.createElement('button');
-    closeBtn.id = `popup-close-btn-${popupId}`;
-    closeBtn.innerHTML = '&times;';
-    closeBtn.style.cssText = 'position: absolute; top: 10px; right: 20px; z-index: 10000; background: transparent; border: none; font-size: 24px; font-weight: bold; color: black; cursor: pointer;';
-    closeBtn.onclick = () => closePopup(popupId);
-    popupContainer.appendChild(closeBtn);
-}
-
-function openNewLeadPopup() {
-    const popupContainer = document.getElementById('popup-container-newlead');
-    const overlay = document.getElementById('popup-overlay-newlead');
-
-    if (popupContainer && overlay) {
-        popupContainer.style.display = 'flex';
-        overlay.style.display = 'flex';
-    } else {
-        createPopupContainer('newlead', 'https://api.clientflow.ai/widget/form/Hpix7Xq0muUZmlINd37c', 'Manual Input', 865);
+    function openNewLeadPopup() {
+        const popupContainer = document.getElementById('popup-container-newlead');
+        const overlay = document.getElementById('popup-overlay-newlead');
+        if (popupContainer && overlay) {
+            popupContainer.style.display = 'flex';
+            overlay.style.display = 'flex';
+        } else {
+            createPopupContainer('newlead', 'https://api.clientflow.ai/widget/form/Hpix7Xq0muUZmlINd37c', 'Manual Input', 865);
+        }
     }
-}
 
-function openRemortgagePopup() {
-    const popupContainer = document.getElementById('popup-container-remortgage');
-    const overlay = document.getElementById('popup-overlay-remortgage');
-
-    if (popupContainer && overlay) {
-        popupContainer.style.display = 'flex';
-        overlay.style.display = 'flex';
-    } else {
-        createPopupContainer('remortgage', 'https://api.clientflow.ai/widget/form/ZN684guea1XfjJg3OIdT', 'New Remortgage Clients', 410);
+    function openRemortgagePopup() {
+        const popupContainer = document.getElementById('popup-container-remortgage');
+        const overlay = document.getElementById('popup-overlay-remortgage');
+        if (popupContainer && overlay) {
+            popupContainer.style.display = 'flex';
+            overlay.style.display = 'flex';
+        } else {
+            createPopupContainer('remortgage', 'https://api.clientflow.ai/widget/form/ZN684guea1XfjJg3OIdT', 'New Remortgage Clients', 410);
+        }
     }
-}
 
-function closePopup(popupId) {
-    const popupContainer = document.getElementById(`popup-container-${popupId}`);
-    const overlay = document.getElementById(`popup-overlay-${popupId}`);
-
-    if (popupContainer) {
-        popupContainer.style.display = 'none';
+    function closePopup(popupId) {
+        const popupContainer = document.getElementById(`popup-container-${popupId}`);
+        const overlay = document.getElementById(`popup-overlay-${popupId}`);
+        if (popupContainer) {
+            popupContainer.style.display = 'none';
+        }
+        if (overlay) {
+            overlay.style.display = 'none';
+        }
     }
-    if (overlay) {
-        overlay.style.display = 'none';
-    }
-}
 
-window.addEventListener('message', handleIframeMessage, false);
-
-// MutationObserver to observe the body for added iframes
-const observer = new MutationObserver((mutations) => {
-    mutations.forEach((mutation) => {
-        mutation.addedNodes.forEach((node) => {
-            if (node.tagName === 'IFRAME' && node.src.includes('clientflow.ai')) {
-                node.addEventListener('load', () => {
-                    console.log('Iframe loaded and ready to send messages.');
-                });
-                observer.disconnect(); // Stop observing once the iframe is found and loaded
-            }
+    const observerForIframes = new MutationObserver((mutations) => {
+        mutations.forEach((mutation) => {
+            mutation.addedNodes.forEach((node) => {
+                if (node.tagName === 'IFRAME' && node.src.includes('clientflow.ai')) {
+                    node.addEventListener('load', () => {
+                        console.log('Iframe loaded and ready to send messages.');
+                    });
+                    observerForIframes.disconnect();
+                }
+            });
         });
     });
-});
 
-observer.observe(document.body, {
-    childList: true,
-    subtree: true
-});
+    observerForIframes.observe(document.body, {
+        childList: true,
+        subtree: true
+    });
 
-    
+    new MutationObserver(() => {
+        if (window.location.href.indexOf("/dashboard") > -1) {
+            const titleElement = document.querySelector('#location-dashboard .hl-header-content .title');
+            if (titleElement) {
+                updateDashboardTitle();
+            } else {
+                setTimeout(updateDashboardTitle, 50);
+            }
+        }
+    }).observe(document.body, { attributes: true, subtree: true, childList: true });
 
-new MutationObserver(() => {
     if (window.location.href.indexOf("/dashboard") > -1) {
-        // Directly update title without fading if element is present
         const titleElement = document.querySelector('#location-dashboard .hl-header-content .title');
         if (titleElement) {
             updateDashboardTitle();
         } else {
-            // Retry after a short delay if element is not yet present
             setTimeout(updateDashboardTitle, 50);
         }
     }
-}).observe(document.body, { attributes: true, subtree: true, childList: true });
 
-// Initial call to handle the case when the page is loaded directly on the dashboard
-if (window.location.href.indexOf("/dashboard") > -1) {
-    // Directly update title without fading if element is present
-    const titleElement = document.querySelector('#location-dashboard .hl-header-content .title');
-    if (titleElement) {
-        updateDashboardTitle();
-    } else {
-        // Retry after a short delay if element is not yet present
-        setTimeout(updateDashboardTitle, 50);
-    }
-}
-
-   
- function updateTitle() {
+    function updateTitle() {
         const titleElement = document.querySelector('.topmenu-navtitle');
         if (titleElement) {
             if (window.location.href.indexOf("/opportunities") > -1) {
@@ -257,7 +205,6 @@ if (window.location.href.indexOf("/dashboard") > -1) {
 
     function updateOpportunitiesContent() {
         updateTitle();
-
         const itemsCenterElements = document.querySelectorAll('.flex.items-center span');
         itemsCenterElements.forEach(element => {
             if (/Opportunities/i.test(element.textContent)) {
@@ -316,7 +263,6 @@ if (window.location.href.indexOf("/dashboard") > -1) {
 
     function updateConversationsContent() {
         updateTitle();
-
         const itemsCenterElements = document.querySelectorAll('.flex.items-center span');
         itemsCenterElements.forEach(element => {
             if (/Conversations/i.test(element.textContent)) {
@@ -410,7 +356,7 @@ if (window.location.href.indexOf("/dashboard") > -1) {
                     updateTitle();
                 } else {
                     showTopMenuNav();
-                    updateTitle(); // Update title for other sections
+                    updateTitle(); 
                 }
             }
         });
@@ -449,11 +395,10 @@ if (window.location.href.indexOf("/dashboard") > -1) {
             updateTitle();
         } else {
             showTopMenuNav();
-            updateTitle(); // Update title for other sections
+            updateTitle();
         }
     }
-    
-    
+
     function replaceText() {
         const sidebar = document.querySelector('#sidebar-v2');
         let textChanged = false;
@@ -541,13 +486,11 @@ if (window.location.href.indexOf("/dashboard") > -1) {
     function reorderMenu() {
         const nav = document.querySelector('nav.flex-1');
         
-        // Check if divider-1 exists, if not create it
         let divider1 = document.getElementById('sb_divider-1');
         if (!divider1) {
             divider1 = createDivider('sb_divider-1');
         }
         
-        // Check if divider-2 exists, if not create it
         let divider2 = document.getElementById('sb_divider-2');
         if (!divider2) {
             divider2 = createDivider('sb_divider-2');
@@ -592,13 +535,12 @@ if (window.location.href.indexOf("/dashboard") > -1) {
             replaceFontAwesomeIcons();
 
             if (textUpdated && allImagesUpdated) {
-                // Apply fade-in effect
                 const navHeader = document.querySelector('.sidebar-v2-location #sidebar-v2 .hl_nav-header nav');
                 if (navHeader) {
                     navHeader.classList.add('fade-in');
                     setTimeout(() => {
                         navHeader.classList.add('visible');
-                    }, 50); // Slight delay to trigger CSS transition
+                    }, 50);
                 }
                 changesApplied = true;
             }
@@ -610,17 +552,14 @@ if (window.location.href.indexOf("/dashboard") > -1) {
             mutation.addedNodes.forEach(node => {
                 if ((node.matches && node.matches('.sidebar-v2-location #sidebar-v2 .hl_nav-header nav')) || (node.querySelector && node.querySelector('.sidebar-v2-location #sidebar-v2 .hl_nav-header nav'))) {
                     changesApplied = false;
-                    setTimeout(applyChanges, 0); // Apply changes when .sidebar-v2-location #sidebar-v2 .hl_nav-header nav is added
+                    setTimeout(applyChanges, 0);
                 }
             });
         });
     }
 
     const observer = new MutationObserver(handleMutation);
-
-    // Observe the entire document for changes
     observer.observe(document.body, { childList: true, subtree: true });
 
-    // Initial call to apply changes
     applyChanges();
 })();
