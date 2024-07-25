@@ -59,7 +59,7 @@ if (window.location.href.indexOf("/dashboard") > -1) {
 }
 
    
-   function updateTitle() {
+ function updateTitle() {
         const titleElement = document.querySelector('.topmenu-navtitle');
         if (titleElement) {
             if (window.location.href.indexOf("/opportunities") > -1) {
