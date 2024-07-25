@@ -117,6 +117,18 @@ if (window.location.href.indexOf("/dashboard") > -1) {
         if (opportunityDetailsButton) {
             opportunityDetailsButton.textContent = opportunityDetailsButton.textContent.replace(/Opportunity Details/i, 'Case Details');
         }
+
+        // Change 'Pipelines' to 'Stages' in h3 element
+        const pipelineTitleElement = document.querySelector('.hl_controls--left.flex h3');
+        if (pipelineTitleElement) {
+            pipelineTitleElement.textContent = pipelineTitleElement.textContent.replace(/Pipelines/i, 'Stages');
+        }
+
+        // Change 'Create New Pipeline' to 'Create New Stage' in button
+        const createPipelineButton = document.querySelector('.hl-btn.inline-flex.items-center');
+        if (createPipelineButton) {
+            createPipelineButton.textContent = createPipelineButton.textContent.replace(/Create new pipeline/i, 'Create new stage');
+        }
     }
 
     new MutationObserver(() => {
