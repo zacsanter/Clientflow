@@ -59,7 +59,7 @@ if (window.location.href.indexOf("/dashboard") > -1) {
 }
 
    
-  function updateTitle() {
+   function updateTitle() {
         const titleElement = document.querySelector('.topmenu-navtitle');
         if (titleElement) {
             if (window.location.href.indexOf("/opportunities") > -1) {
@@ -81,6 +81,16 @@ if (window.location.href.indexOf("/dashboard") > -1) {
             } else {
                 titleElement.textContent = 'Dashboard';
             }
+        }
+    }
+
+    function resetContent() {
+        // Recreate the 'topmenu-nav' div if it's missing
+        if (!document.querySelector('.topmenu-nav')) {
+            const topMenuNav = document.createElement('div');
+            topMenuNav.className = 'topmenu-nav';
+            // Add necessary content and structure to the topMenuNav div if needed
+            document.body.prepend(topMenuNav); // Adjust the location as per the actual DOM structure
         }
     }
 
@@ -221,6 +231,7 @@ if (window.location.href.indexOf("/dashboard") > -1) {
     function observeChanges() {
         const observer = new MutationObserver(() => {
             if (specificIDs.includes(getCurrentSubaccountID())) {
+                resetContent();
                 if (window.location.href.indexOf("/opportunities") > -1) {
                     updateOpportunitiesContent();
                 } else if (window.location.href.indexOf("/conversations/templates") > -1) {
@@ -248,6 +259,7 @@ if (window.location.href.indexOf("/dashboard") > -1) {
 
     // Initial call to handle the case when the page is loaded directly on a specific section
     if (specificIDs.includes(getCurrentSubaccountID())) {
+        resetContent();
         if (window.location.href.indexOf("/opportunities") > -1) {
             updateOpportunitiesContent();
         } else if (window.location.href.indexOf("/conversations/templates") > -1) {
