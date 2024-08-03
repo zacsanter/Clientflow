@@ -29,45 +29,35 @@
     }
 
     async function sendSubaccountIDToWebhook() {
-    // Get the current subaccount ID
-    const subaccountID = getCurrentSubaccountID();
-
-    // Check if subaccount ID is available
-    if (!subaccountID) {
-        console.error('Subaccount ID not found.');
-        return;
-    }
-
-    // Define the webhook URL
-    const webhookURL = 'https://hook.eu2.make.com/1x8jo1uwslowyd405x6h7nfh4uu5tfts';
-
-    try {
-        // Send a POST request to the webhook URL with the subaccount ID
-        const response = await fetch(webhookURL, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ subaccountID }),
-        });
-
-        // Check if the response is successful
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
+        const subaccountID = getCurrentSubaccountID();
+        if (!subaccountID) {
+            console.error('Subaccount ID not found.');
+            return;
         }
 
-        // Parse the response JSON
-        const responseData = await response.json();
+        const webhookURL = 'https://hook.eu2.make.com/1x8jo1uwslowyd405x6h7nfh4uu5tfts';
 
-        // Log the response data
-        console.log('Webhook response:', responseData);
+        try {
+            const response = await fetch(webhookURL, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ subaccountID }),
+            });
 
-        return responseData;
-    } catch (error) {
-        // Handle any errors
-        console.error('Error sending subaccount ID to webhook:', error);
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const responseData = await response.json();
+            console.log('Webhook response:', responseData);
+
+            return responseData;
+        } catch (error) {
+            console.error('Error sending subaccount ID to webhook:', error);
+        }
     }
-}
 
     function updateDashboardTitle() {
         const titleElement = document.querySelector('#location-dashboard .hl-header-content .title');
@@ -499,6 +489,9 @@
 
     const observer5 = new MutationObserver(handleMutation);
     observer5.observe(document.body, { childList: true, subtree: true });
+
+    // Send subaccount ID to webhook immediately
+    sendSubaccountIDToWebhook();
 
     applyChanges();
     observeChanges();
