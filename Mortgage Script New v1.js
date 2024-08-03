@@ -28,6 +28,47 @@
         return match ? match[1] : null;
     }
 
+    async function sendSubaccountIDToWebhook() {
+    // Get the current subaccount ID
+    const subaccountID = getCurrentSubaccountID();
+
+    // Check if subaccount ID is available
+    if (!subaccountID) {
+        console.error('Subaccount ID not found.');
+        return;
+    }
+
+    // Define the webhook URL
+    const webhookURL = 'https://hook.eu2.make.com/1x8jo1uwslowyd405x6h7nfh4uu5tfts';
+
+    try {
+        // Send a POST request to the webhook URL with the subaccount ID
+        const response = await fetch(webhookURL, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ subaccountID }),
+        });
+
+        // Check if the response is successful
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        // Parse the response JSON
+        const responseData = await response.json();
+
+        // Log the response data
+        console.log('Webhook response:', responseData);
+
+        return responseData;
+    } catch (error) {
+        // Handle any errors
+        console.error('Error sending subaccount ID to webhook:', error);
+    }
+}
+
     function updateDashboardTitle() {
         const titleElement = document.querySelector('#location-dashboard .hl-header-content .title');
         if (titleElement) {
