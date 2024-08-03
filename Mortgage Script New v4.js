@@ -1,5 +1,5 @@
 (function() {
-    const specificIDs = ['39vAwlFCldUFvMyCtKGy'];
+    const specificIDs = ['39vAwlFCldUFvMyCtKGy', '39vAwlFCldUFvMyCtKGy'];
     const iconUrls = {
         'sb_dashboard': 'https://uploads-ssl.webflow.com/64b5377d6986a8653501c06c/669e9d19b05ac2e0b2a515b7_CF%20Icon%20-%20Home_1.svg',
         'sb_conversations': 'https://uploads-ssl.webflow.com/64b5377d6986a8653501c06c/669e9d86cca54ae22933ebec_CF%20Icon%20-%20Messages.svg',
