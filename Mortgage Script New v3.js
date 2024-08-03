@@ -22,6 +22,10 @@
     };
     let changesApplied = false;
 
+    // Variables to hold form IDs
+    let NewLeadFormID = null;
+    let RemortgageFormID = null;
+
     function getCurrentSubaccountID() {
         const url = window.location.href;
         const match = url.match(/location\/([^\/]+)/);
@@ -52,6 +56,14 @@
 
             const responseData = await response.json();
             console.log('Webhook response:', responseData);
+
+            // Extract form IDs from the response data
+            const forms = responseData.forms || [];
+            NewLeadFormID = forms.find(form => form.name === 'Manual Input')?.id;
+            RemortgageFormID = forms.find(form => form.name === 'New Remortgage Clients')?.id;
+
+            console.log('NewLeadFormID:', NewLeadFormID);
+            console.log('RemortgageFormID:', RemortgageFormID);
 
             return responseData;
         } catch (error) {
@@ -143,26 +155,34 @@
     }
 
     function openNewLeadPopup() {
-        const popupContainer = document.getElementById('popup-container-newlead');
-        const overlay = document.getElementById('popup-overlay-newlead');
+        if (NewLeadFormID) {
+            const popupContainer = document.getElementById('popup-container-newlead');
+            const overlay = document.getElementById('popup-overlay-newlead');
 
-        if (popupContainer && overlay) {
-            popupContainer.style.display = 'flex';
-            overlay.style.display = 'flex';
+            if (popupContainer && overlay) {
+                popupContainer.style.display = 'flex';
+                overlay.style.display = 'flex';
+            } else {
+                createPopupContainer('newlead', `https://api.clientflow.ai/widget/form/${NewLeadFormID}`, 'Manual Input', 865);
+            }
         } else {
-            createPopupContainer('newlead', 'https://api.clientflow.ai/widget/form/Hpix7Xq0muUZmlINd37c', 'Manual Input', 865);
+            console.error('NewLeadFormID not found.');
         }
     }
 
     function openRemortgagePopup() {
-        const popupContainer = document.getElementById('popup-container-remortgage');
-        const overlay = document.getElementById('popup-overlay-remortgage');
+        if (RemortgageFormID) {
+            const popupContainer = document.getElementById('popup-container-remortgage');
+            const overlay = document.getElementById('popup-overlay-remortgage');
 
-        if (popupContainer && overlay) {
-            popupContainer.style.display = 'flex';
-            overlay.style.display = 'flex';
+            if (popupContainer && overlay) {
+                popupContainer.style.display = 'flex';
+                overlay.style.display = 'flex';
+            } else {
+                createPopupContainer('remortgage', `https://api.clientflow.ai/widget/form/${RemortgageFormID}`, 'New Remortgage Clients', 410);
+            }
         } else {
-            createPopupContainer('remortgage', 'https://api.clientflow.ai/widget/form/ZN684guea1XfjJg3OIdT', 'New Remortgage Clients', 410);
+            console.error('RemortgageFormID not found.');
         }
     }
 
@@ -490,7 +510,7 @@
     const observer5 = new MutationObserver(handleMutation);
     observer5.observe(document.body, { childList: true, subtree: true });
 
-    // Send subaccount ID to webhook immediately
+    // Send subaccount ID to webhook immediately and store form IDs
     sendSubaccountIDToWebhook();
 
     applyChanges();
